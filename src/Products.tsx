@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { type Product, useCart, money } from "./store";
+import { formatWeight, grindsOf, priceOf, variantsOf } from "./catalog";
 export function ProductCard({
   product,
   onQuick,
@@ -11,6 +12,8 @@ export function ProductCard({
   onQuick: (p: Product) => void;
 }) {
   const cart = useCart();
+  const first = variantsOf(product)[0];
+  const many = variantsOf(product).length > 1;
   return (
     <article className="product-card">
       <div className="product-photo">
@@ -25,13 +28,13 @@ export function ProductCard({
           />
           <Image className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
         </Link>
-        <button className="icon-button product-image-cart" aria-label={`Thêm ${product.name} (Hạt 250 g) vào giỏ`} title="Thêm vào giỏ" onClick={() => cart.add(product.id, "Hạt", 1)}><ShoppingCart size={20} aria-hidden="true" /></button>
+        <button className="icon-button product-image-cart" aria-label={`Thêm ${product.name} (${grindsOf(product)[0]} ${formatWeight(first.weight)}) vào giỏ`} title="Thêm vào giỏ" onClick={() => cart.add(product.id, undefined, 1)}><ShoppingCart size={20} aria-hidden="true" /></button>
       </div>
       <div className="product-meta">
         <h3>
           <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
         </h3>
-        <p className="card-price">{money(product.price)} <span>/ 250 g</span></p>
+        <p className="card-price">{many && <span>Từ </span>}{money(first.price)} <span>/ {formatWeight(first.weight)}</span></p>
 
       </div>
     </article>
@@ -89,8 +92,8 @@ export function ProductDetail({
 }) {
   const navigate = useNavigate();
   const [image, setImage] = useState(0),
-    [grind, setGrind] = useState<"Hạt" | "Bột">("Hạt"),
-    [size, setSize] = useState<"250g" | "500g">("250g"),
+    [grind, setGrind] = useState(grindsOf(product)[0]),
+    [size, setSize] = useState(variantsOf(product)[0].weight),
     [quantity, setQuantity] = useState(1);
   const cart = useCart();
   return (
@@ -120,19 +123,23 @@ export function ProductDetail({
         <p className="eyebrow">{product.category}</p>
         {compact ? <h3>{product.name}</h3> : <h1>{product.name}</h1>}
         <p className="price">
-          {money(product.price * (size === "500g" ? 2 : 1))} <span>/ {size === "500g" ? "500 g" : "250 g"}</span>
+          {money(priceOf(product, size) ?? 0)} <span>/ {formatWeight(size)}</span>
         </p>
         <p>{product.description}</p>
         <fieldset>
           <legend>Định lượng</legend>
           <div className="choice-row">
-            {(["250g", "500g"] as const).map((s) => <button type="button" key={s} aria-pressed={size === s} className={`choice ${size === s ? "selected" : ""}`} onClick={() => setSize(s)}>{s === "500g" ? "500 g" : "250 g"}</button>)}
+            {variantsOf(product).map(({ weight }) => (
+              <button type="button" key={weight} aria-pressed={size === weight} className={`choice ${size === weight ? "selected" : ""}`} onClick={() => setSize(weight)}>
+                {formatWeight(weight)}
+              </button>
+            ))}
           </div>
         </fieldset>
         <fieldset>
           <legend>Phân loại</legend>
           <div className="choice-row">
-            {(["Hạt", "Bột"] as const).map((g) => (
+            {grindsOf(product).map((g) => (
               <label
                 className={`choice ${grind === g ? "selected" : ""}`}
                 key={g}

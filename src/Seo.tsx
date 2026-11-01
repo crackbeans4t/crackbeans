@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useContent, type Content } from './content';
+import { formatWeight, minPrice, variantsOf } from './catalog';
 export const SITE_URL='https://crackbeans.vercel.app';
 // Từ khóa chính mỗi trang nằm trong title, meta description và H1 (xem reports/SEO-REACT.md).
 const descriptions:Record<string,[string,string]>={
@@ -20,8 +21,8 @@ export function metadata(path:string,data:Content){
   const known=!!descriptions[path]||!!product||!!article||!!policy[path.split('/')[2]];
   const productTitle=product&&[`${titleCase(product.name)} – Cà phê ${product.category} rang mộc | Crack Beans`,`${titleCase(product.name)} – Cà phê ${product.category} | Crack Beans`].find(t=>t.length<=60);
   const title=product?productTitle||`${titleCase(product.name)} | Crack Beans`:article?(`${article.title} | Crack Beans`.length<=60?`${article.title} | Crack Beans`:article.title):descriptions[path]?.[0]||`${policy[path.split('/')[2]]||'Không tìm thấy trang'} | Crack Beans`;
-  const min=Math.min(...data.products.map(p=>p.price)).toLocaleString('vi-VN')+' ₫';
-  const description=product?clip(`${titleCase(product.name)} ${product.price.toLocaleString('vi-VN')} ₫/250 g: ${product.description}`):article?clip((article as {description?:string}).description||article.text.split(/\n\s*\n/)[0]):clip((descriptions[path]?.[1]||'Thông tin hỗ trợ khách hàng và chính sách của Crack Beans.').replace('{min}',min));
+  const min=Math.min(...data.products.map(minPrice)).toLocaleString('vi-VN')+' ₫';
+  const description=product?clip(`${titleCase(product.name)} ${variantsOf(product)[0].price.toLocaleString('vi-VN')} ₫/${formatWeight(variantsOf(product)[0].weight)}: ${product.description}`):article?clip((article as {description?:string}).description||article.text.split(/\n\s*\n/)[0]):clip((descriptions[path]?.[1]||'Thông tin hỗ trợ khách hàng và chính sách của Crack Beans.').replace('{min}',min));
   const canonical=SITE_URL+(path==='/'?'/':path);
   const image=SITE_URL+(product?.images[0].src||article?.image||data.assets.shop);
   const robots=path==='/admin'||path==='/thanh-toan'||!known?'noindex, nofollow':'index, follow, max-image-preview:large';
@@ -30,7 +31,7 @@ export function metadata(path:string,data:Content){
   if(path!=='/')crumbs.push({'@type':'ListItem',position:2,name:product?'Sản phẩm':article?'Blog':title.split('|')[0].trim(),item:SITE_URL+(product?'/san-pham':article?'/blog':path)});
   if(product||article)crumbs.push({'@type':'ListItem',position:3,name:product?.name||article!.title,item:canonical});
   const graph:unknown[]=[organization,{'@type':'WebSite','@id':`${SITE_URL}/#website`,url:SITE_URL,name:'Crack Beans',inLanguage:'vi-VN',publisher:{'@id':`${SITE_URL}/#organization`}}, {'@type':'BreadcrumbList',itemListElement:crumbs}];
-  if(product)graph.push({'@type':'Product',name:product.name,description:product.description,image:product.images.map(i=>SITE_URL+i.src),sku:product.id,brand:{'@type':'Brand',name:'Crack Beans'},category:`Cà phê ${product.category}`,offers:{'@type':'Offer',url:canonical,priceCurrency:'VND',price:product.price,itemCondition:'https://schema.org/NewCondition'}});
+  if(product)graph.push({'@type':'Product',name:product.name,description:product.description,image:product.images.map(i=>SITE_URL+i.src),sku:product.id,brand:{'@type':'Brand',name:'Crack Beans'},category:`Cà phê ${product.category}`,offers:{'@type':'AggregateOffer',url:canonical,priceCurrency:'VND',lowPrice:minPrice(product),highPrice:Math.max(...variantsOf(product).map(v=>v.price)),offerCount:variantsOf(product).length,itemCondition:'https://schema.org/NewCondition'}});
   const meta=article as {keyword?:string;updated?:string}|undefined;
   if(article)graph.push({'@type':'BlogPosting',headline:article.title,description,image,mainEntityOfPage:canonical,...(meta?.keyword?{keywords:meta.keyword}:{}),...(meta?.updated?{dateModified:meta.updated}:{}),author:{'@type':'Organization',name:'Crack Beans'},publisher:{'@id':`${SITE_URL}/#organization`},inLanguage:'vi-VN'});
   return{title,description,canonical,image,robots,jsonld:{'@context':'https://schema.org','@graph':graph}};

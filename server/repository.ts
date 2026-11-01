@@ -36,6 +36,7 @@ export async function ready() {
     await query('CREATE TABLE IF NOT EXISTS cb_orders (id TEXT PRIMARY KEY, payload TEXT NOT NULL, created_at TEXT NOT NULL, status TEXT NOT NULL)');
     await query('CREATE TABLE IF NOT EXISTS cb_sessions (token TEXT PRIMARY KEY, expires BIGINT NOT NULL)');
     await query('CREATE TABLE IF NOT EXISTS cb_limits (id TEXT PRIMARY KEY, count INTEGER NOT NULL, expires BIGINT NOT NULL)');
+    await query('CREATE TABLE IF NOT EXISTS cb_surveys (id TEXT PRIMARY KEY, payload TEXT NOT NULL, created_at TEXT NOT NULL)');
     const seed = await readFile(resolve('src/data.json'), 'utf8');
     await query('INSERT INTO cb_content (id, payload, revision) VALUES (1, $1, 1) ON CONFLICT(id) DO NOTHING', [seed]);
   })().catch((e) => { init = undefined; throw e; });

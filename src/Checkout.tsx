@@ -1,7 +1,8 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useContent } from './content';
-import { money, useCart } from './store';
+import { money, useCart, linePrice } from './store';
+import { formatWeight } from './catalog';
 export default function Checkout() {
   const cart=useCart(), {data}=useContent();
   const [busy,setBusy]=useState(false), [error,setError]=useState(''), [receipt,setReceipt]=useState('');
@@ -33,7 +34,7 @@ export default function Checkout() {
         <button className="button full" disabled={busy}>{busy?'Đang gửi yêu cầu…':'Gửi yêu cầu đặt hàng COD'}</button><small className="muted">Cần hỗ trợ? Gọi <a href="tel:0767509715">076 750 9715</a>.</small>
       </form>
       <aside className="checkout-summary"><h2>Sản phẩm đã chọn <span>({cart.count})</span></h2>
-        {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind+line.size}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>{line.size === "500g" ? "500 g" : "250 g"} · {line.grind} · {line.quantity} gói</small><strong>{money(p.price*(line.size === "500g" ? 2 : 1)*line.quantity)}</strong></div></div>})}
+        {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind+line.size}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>{formatWeight(line.size)} · {line.grind} · {line.quantity} gói</small><strong>{money(linePrice(data.products, line)*line.quantity)}</strong></div></div>})}
         <div className="summary-totals"><div><span>Phí vận chuyển</span><span>Báo khi gọi xác nhận</span></div><div className="summary-subtotal"><span>Tạm tính</span><strong>{money(cart.total)}</strong></div></div>
         <Link className="text-link" to="/san-pham">Chọn thêm cà phê</Link>
       </aside>

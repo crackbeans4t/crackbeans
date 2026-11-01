@@ -4,8 +4,10 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowUpDown, Check, ChevronDown, Mail, Phone, MapPin } from "lucide-react";
 import data from "./data.json";
 import { useContent } from './content';
+import { categoriesOf, minPrice } from "./catalog";
 import { type Product } from "./store";
 import { ProductCard } from "./Products";
+import { OPEN_QUIZ } from "./Quiz";
 type QuickProps = { onQuick: (p: Product) => void };
 export function Home({ onQuick }: QuickProps) {
   const {data}=useContent();
@@ -29,9 +31,14 @@ export function Home({ onQuick }: QuickProps) {
             giữa tinh hoa nông sản Việt, nghệ thuật rang mộc thủ công tỉ mỉ và
             tư duy thiết kế tối giản, hiện đại trong từng mẻ hạt.
           </p>
-          <Link className="button button-cream" to="/san-pham">
-            Khám phá sản phẩm
-          </Link>
+          <div className="hero-actions">
+            <Link className="button button-cream" to="/san-pham">
+              Khám phá sản phẩm
+            </Link>
+            <button className="button button-ghost" onClick={() => window.dispatchEvent(new Event(OPEN_QUIZ))}>
+              Tìm cà phê hợp gu
+            </button>
+          </div>
         </div>
       </section>
       <section className="philosophy container section-space">
@@ -252,9 +259,9 @@ export function Shop({ onQuick }: QuickProps) {
   );
   products = [...products].sort((a, b) =>
     sort === "asc"
-      ? a.price - b.price
+      ? minPrice(a) - minPrice(b)
       : sort === "desc"
-        ? b.price - a.price
+        ? minPrice(b) - minPrice(a)
         : data.products.indexOf(b) - data.products.indexOf(a),
   );
   return (
@@ -285,7 +292,7 @@ export function Shop({ onQuick }: QuickProps) {
             role="group"
             aria-label="Lọc loại cà phê"
           >
-            {["Tất cả", "Robusta", "Arabica"].map((c) => (
+            {["Tất cả", ...categoriesOf(data)].map((c) => (
               <button
                 key={c}
                 aria-pressed={filter === c}

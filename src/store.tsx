@@ -7,13 +7,18 @@ import {
 } from "react";
 import data from "./data.json";
 import { useContent } from './content';
+import { formatWeight, grindsOf, priceOf, variantsOf } from "./catalog";
 export type Product = (typeof data.products)[number];
-export type CartLine = { id: string; grind: "Hạt" | "Bột"; size: "250g" | "500g"; quantity: number };
+export type CartLine = { id: string; grind: string; size: string; quantity: number };
 const KEY = "crack-beans-react-cart-v1";
 export const money = (value: number) =>
   new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
     value,
   );
+export const linePrice = (products: Product[], line: CartLine) => {
+  const p = products.find((p) => p.id === line.id);
+  return (p && priceOf(p, line.size)) || 0;
+};
 export function parseCart(raw: string | null, products: Product[] = data.products): CartLine[] {
   try {
     const input: unknown = JSON.parse(raw || "[]");
@@ -24,9 +29,9 @@ export function parseCart(raw: string | null, products: Product[] = data.product
         (x): x is CartLine =>
           !!x &&
           typeof x === "object" &&
-          products.some((p) => p.id === x.id) &&
-          (x.grind === "Hạt" || x.grind === "Bột") &&
-          (x.size === "250g" || x.size === "500g") &&
+          typeof x.size === "string" &&
+          typeof x.grind === "string" &&
+          products.some((p) => p.id === x.id && priceOf(p, x.size) !== undefined && grindsOf(p).includes(x.grind)) &&
           Number.isInteger(x.quantity) &&
           x.quantity > 0 &&
           x.quantity <= 99,
@@ -48,8 +53,8 @@ function loadCart(products: Product[] = data.products) {
 }
 const CartContext = createContext<{
   lines: CartLine[];
-  add: (id: string, grind: CartLine["grind"], quantity: number, size?: CartLine["size"]) => void;
-  update: (id: string, grind: CartLine["grind"], quantity: number, size?: CartLine["size"]) => void;
+  add: (id: string, grind: string | undefined, quantity: number, size?: string) => void;
+  update: (id: string, grind: CartLine["grind"], quantity: number, size: string) => void;
   count: number;
   total: number;
 } | null>(null);
@@ -68,8 +73,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       /* Cart remains usable when browser storage is unavailable. */
     }
   }, [lines,hydrated]);
-  function add(id: string, grind: CartLine["grind"], quantity: number, size: CartLine["size"] = "250g") {
-    setNotice(`Đã thêm ${quantity} gói ${grind} ${size === "500g" ? "500 g" : "250 g"} · ${catalogue.products.find(p=>p.id===id)?.name || 'cà phê'}`);
+  function add(id: string, grind: string | undefined, quantity: number, size?: string) {
+    const product = catalogue.products.find((p) => p.id === id);
+    if (!product) return;
+    grind ??= grindsOf(product)[0];
+    size ??= variantsOf(product)[0].weight;
+    setNotice(`Đã thêm ${quantity} gói ${grind} ${formatWeight(size)} · ${product.name}`);
     setLines((old) => {
       const exists = old.find((l) => l.id === id && l.grind === grind && l.size === size);
       return exists
@@ -84,7 +93,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           ];
     });
   }
-  function update(id: string, grind: CartLine["grind"], quantity: number, size: CartLine["size"] = "250g") {
+  function update(id: string, grind: CartLine["grind"], quantity: number, size: string) {
     setLines((old) =>
       old
         .map((l) =>
@@ -97,7 +106,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
   const total = lines.reduce(
     (sum, l) =>
-      sum + (catalogue.products.find((p) => p.id === l.id)?.price || 0) * (l.size === "500g" ? 2 : 1) * l.quantity,
+      sum + linePrice(catalogue.products, l) * l.quantity,
     0,
   );
   return (

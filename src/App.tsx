@@ -18,13 +18,15 @@ import {
   MapPin,
   Clock,
 } from "lucide-react";
-import { CartProvider, useCart, money, type Product } from "./store";
+import { CartProvider, useCart, money, linePrice, type Product } from "./store";
+import { categoriesOf, formatWeight } from "./catalog";
 import Overlay from "./Overlay";
 import { ProductCard, ProductDetail, Quantity } from "./Products";
 import { Home, About, Shop, Blog, Post, Contact, Policy } from "./Pages";
 const Admin=lazy(()=>import('./Admin'));
 const CheckoutPage=lazy(()=>import('./Checkout'));
 import Seo from './Seo';
+import Quiz, { OPEN_QUIZ } from "./Quiz";
 import { ContentProvider, useContent } from './content';
 import { AnimateUIProvider } from "@animate-ui/react/provider";
 export const navigation = [
@@ -63,9 +65,9 @@ function Header({ onCart }: { onCart: () => void }) {
                     {label} <ChevronDown size={14} aria-hidden="true" />
                   </NavLink>
                   <div className="nav-panel">
-                    {["Robusta", "Arabica"].map((c) => (
+                    {categoriesOf(data).map((c) => (
                       <div key={c}>
-                        <Link className="nav-panel-head" to={`/san-pham?loai=${c}`}>
+                        <Link className="nav-panel-head" to={`/san-pham?loai=${encodeURIComponent(c)}`}>
                           {c}
                         </Link>
                         {data.products
@@ -120,8 +122,11 @@ function Header({ onCart }: { onCart: () => void }) {
                       <ChevronDown size={20} />
                     </summary>
                     <div>
-                      <Link to="/san-pham?loai=Robusta">Robusta</Link>
-                      <Link to="/san-pham?loai=Arabica">Arabica</Link>
+                      {categoriesOf(data).map((c) => (
+                        <Link key={c} to={`/san-pham?loai=${encodeURIComponent(c)}`}>
+                          {c}
+                        </Link>
+                      ))}
                     </div>
                   </details>
                 </div>
@@ -253,8 +258,8 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
                       {p.name}
                     </Link>
                   </h3>
-                  <p>{line.size === "500g" ? "500 g" : "250 g"} / {line.grind}</p>
-                  <strong>{money(p.price * (line.size === "500g" ? 2 : 1) * line.quantity)}</strong>
+                  <p>{formatWeight(line.size)} / {line.grind}</p>
+                  <strong>{money(linePrice(data.products, line) * line.quantity)}</strong>
                   <Quantity
                     value={line.quantity}
                     onChange={(q) => cart.update(line.id, line.grind, q, line.size)}
@@ -300,9 +305,18 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
 function DetailPage({ onAdded }: { onAdded: () => void }) {
   const {data}=useContent();
   const { id } = useParams();
+  const suggested = new URLSearchParams(useLocation().search).has("goi-y");
   const p = data.products.find((p) => p.id === id);
   return p ? (
     <div className="container page-space">
+      {suggested && (
+        <p className="quiz-note">
+          Gợi ý dựa trên câu trả lời của bạn.{" "}
+          <button className="text-button" onClick={() => window.dispatchEvent(new Event(OPEN_QUIZ))}>
+            Làm lại
+          </button>
+        </p>
+      )}
       <nav className="breadcrumbs" aria-label="Đường dẫn">
         <Link to="/">Trang chủ</Link>
         <span>/</span>
@@ -382,6 +396,7 @@ function Site() {
         )}
       </Overlay>
       <Cart open={cartOpen} onClose={() => setCartOpen(false)} />
+      <Quiz />
     </>
   );
 }

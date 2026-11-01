@@ -1,7 +1,8 @@
 import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { getContent, query, ready, limit, storage } from './repository.ts';
-import { contentSchema, orderSchema } from './validation.ts';
+import { contentSchema, orderSchema, surveySchema } from './validation.ts';
+import { grindsOf, priceOf } from '../src/catalog.ts';
 const hash = (value: string) => createHash('sha256').update(value).digest('hex');
 async function body(req: IncomingMessage) {
   let text = ''; for await (const chunk of req) { text += chunk; if (Buffer.byteLength(text) > 1000000) throw new Error('Nội dung quá lớn'); }
@@ -56,16 +57,25 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const ip = clientIp(req);
       if (!await limit(`orders:${ip}`, 8, 3600000)) return send(res, 429, { error: 'Đã gửi nhiều yêu cầu. Vui lòng liên hệ cửa hàng.' });
       const { content } = await getContent();
-      const missing = input.lines.find(line => !content.products.some((p: {id:string}) => p.id === line.id));
-      if (missing) return send(res, 409, { error: 'Một sản phẩm trong giỏ không còn bán. Xóa sản phẩm đó khỏi giỏ rồi thử lại.' });
+      const missing = input.lines.find(line => { const p = content.products.find((p: {id:string}) => p.id === line.id); return !p || priceOf(p, line.size) === undefined || !grindsOf(p).includes(line.grind); });
+      if (missing) return send(res, 409, { error: 'Một sản phẩm, khối lượng hoặc phân loại trong giỏ không còn bán. Xóa dòng đó khỏi giỏ rồi thử lại.' });
       const lines = input.lines.map(line => {
         const p = content.products.find((p: {id:string}) => p.id === line.id);
         if (!p) throw new Error('Sản phẩm không còn trong catalogue');
-        return { ...line, name: p.name, price: p.price * (line.size === "500g" ? 2 : 1) };
+        const price = priceOf(p, line.size);
+        if (price === undefined) throw new Error(`Khối lượng ${line.size} không còn bán`);
+        return { ...line, name: p.name, price };
       });
       const order = { ...input, lines, subtotal: lines.reduce((n, l) => n + l.price * l.quantity, 0), shipping: null, payment: 'cod' };
       await query('INSERT INTO cb_orders (id, payload, created_at, status) VALUES ($1,$2,$3,$4) ON CONFLICT(id) DO NOTHING', [input.key, JSON.stringify(order), new Date().toISOString(), 'pending']);
       return send(res, 201, { id: input.key, status: 'pending', subtotal: order.subtotal });
+    }
+    if (path === '/api/survey' && method === 'POST') {
+      const parsed = surveySchema.safeParse(await body(req));
+      if (!parsed.success) return send(res, 400, { error: 'Câu trả lời không hợp lệ' });
+      if (!await limit(`survey:${clientIp(req)}`, 20, 3600000)) return send(res, 429, { error: 'Đã gửi nhiều lần' });
+      await query('INSERT INTO cb_surveys (id, payload, created_at) VALUES ($1,$2,$3)', [randomBytes(12).toString('hex'), JSON.stringify(parsed.data), new Date().toISOString()]);
+      return send(res, 201, { ok: true });
     }
     if (!authenticated) return send(res, 401, { error: 'Vui lòng đăng nhập' });
     if (path === '/api/admin/content' && method === 'PUT') {
@@ -74,6 +84,10 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const rows = await query('UPDATE cb_content SET payload = $1, revision = revision + 1 WHERE id = 1 AND revision = $2 RETURNING revision', [JSON.stringify(parsed.data), input.revision]);
       if (!rows.length) return send(res, 409, { error: 'Dữ liệu đã đổi ở phiên khác. Tải lại trước khi sửa.' });
       return send(res, 200, { revision: Number(rows[0].revision) });
+    }
+    if (path === '/api/admin/surveys' && method === 'GET') {
+      const rows = await query('SELECT payload, created_at FROM cb_surveys ORDER BY created_at DESC LIMIT 1000');
+      return send(res, 200, rows.map(row => ({ ...JSON.parse(String(row.payload)), createdAt: row.created_at })));
     }
     if (path === '/api/admin/orders' && method === 'GET') {
       const rows = await query('SELECT id, payload, status, created_at FROM cb_orders ORDER BY created_at DESC LIMIT 200');
