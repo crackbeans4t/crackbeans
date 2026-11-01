@@ -406,17 +406,12 @@ export function Policy() {
     <section className="container article page-space">
       <p className="eyebrow">Hỗ trợ khách hàng</p>
       <h1>{titles[id || ""] || "Chính sách"}</h1>
-      <p>
-        Chính sách chi tiết đang được cửa hàng hoàn thiện. Trước khi đặt hàng,
-        vui lòng liên hệ Crack Beans để xác nhận phí giao hàng, điều kiện đổi
-        trả và phương thức thanh toán áp dụng cho đơn hàng của bạn.
-      </p>
+      <p>Cập nhật ngày 01/11/2026. Liên hệ hỗ trợ: 076 750 9715 hoặc crackbeans.4t@gmail.com.</p>
+      {id==='giao-hang'&&<><h2>Xác nhận trước khi giao</h2><p>Gửi biểu mẫu COD là gửi yêu cầu đặt hàng. Cửa hàng sẽ gọi lại để xác nhận sản phẩm, địa chỉ, phí vận chuyển và thời gian dự kiến trước khi gửi hàng. Phí giao chưa nằm trong tiền sản phẩm hiển thị trên website.</p><h2>Thanh toán tiền mặt</h2><p>Bạn thanh toán tiền mặt khi nhận hàng theo số tiền đã được cửa hàng xác nhận. Nếu cần đổi địa chỉ, đổi sản phẩm hoặc hủy yêu cầu, vui lòng liên hệ sớm trước khi cửa hàng bàn giao cho đơn vị vận chuyển.</p></>}
+      {id==='doi-tra'&&<><h2>Khi sản phẩm có vấn đề</h2><p>Nếu nhận sai sản phẩm, bao bì hư hỏng hoặc sản phẩm có dấu hiệu bất thường, hãy giữ lại bao bì và liên hệ cửa hàng kèm mã yêu cầu, ảnh sản phẩm và mô tả vấn đề. Cửa hàng sẽ đối chiếu trước khi thống nhất phương án đổi, nhận lại hoặc hoàn tiền phù hợp.</p><h2>Trao đổi rõ trước khi gửi lại</h2><p>Không tự gửi trả khi chưa có hướng dẫn từ cửa hàng. Điều kiện, chi phí gửi lại và hình thức hoàn tiền sẽ được thông báo sau khi kiểm tra từng trường hợp; website chưa áp dụng mức phí hoặc thời hạn đổi trả cố định.</p></>}
+      {id==='dieu-khoan'&&<><h2>Thông tin sản phẩm và giá</h2><p>Giá niêm yết hiện áp dụng cho gói 250 g. Gói 500 g cần liên hệ xác nhận. Hình ảnh thể hiện bao bì và hướng dẫn sản phẩm; màu sắc có thể khác giữa các màn hình.</p><h2>Yêu cầu đặt hàng</h2><p>Biểu mẫu COD không thu tiền trực tuyến và không tự xác nhận lịch giao. Cửa hàng liên hệ để thống nhất sản phẩm, tổng tiền và việc giao hàng. Vui lòng cung cấp thông tin chính xác, không gửi nội dung giả mạo hoặc gây cản trở hoạt động của website.</p></>}
       {id === "bao-mat" && (
-        <p>
-          Bản website này lưu giỏ hàng trên trình duyệt của bạn. Chưa có biểu
-          mẫu gửi dữ liệu khách hàng, hệ thống tài khoản hay cổng thanh toán
-          trực tuyến. Bạn có thể xóa giỏ hàng bằng các nút xóa sản phẩm.
-        </p>
+        <><h2>Thông tin được xử lý</h2><p>Khi bạn gửi yêu cầu COD, website nhận họ tên, số điện thoại, địa chỉ giao hàng, ghi chú và sản phẩm đã chọn để liên hệ, xác nhận và xử lý yêu cầu. Không cung cấp dữ liệu nhạy cảm trong phần ghi chú. Website không thu thập thông tin thẻ ngân hàng.</p><h2>Lưu trữ và quyền truy cập</h2><p>Yêu cầu được lưu trong database Neon kết nối qua hạ tầng Vercel. Chỉ tài khoản quản trị được đăng nhập mới xem và xử lý dữ liệu đơn. Thông tin cần cho việc giao hàng có thể được chuyển cho đơn vị vận chuyển khi cửa hàng và khách đã xác nhận giao.</p><h2>Giỏ hàng và cookie</h2><p>Giỏ hàng được lưu bằng localStorage trên trình duyệt. Cookie phiên HttpOnly được dùng cho đăng nhập quản trị. Bản hiện tại không gắn công cụ quảng cáo hoặc theo dõi hành vi của bên thứ ba; nhà cung cấp hạ tầng có thể xử lý nhật ký kỹ thuật để vận hành dịch vụ.</p><h2>Yêu cầu xem, sửa hoặc xóa</h2><p>Bạn có thể liên hệ crackbeans.4t@gmail.com hoặc 076 750 9715 để yêu cầu xem, sửa hoặc xóa thông tin yêu cầu của mình. Cửa hàng xác minh người yêu cầu trước khi xử lý và chỉ giữ dữ liệu cần thiết cho việc hỗ trợ, giải quyết giao dịch hoặc nghĩa vụ áp dụng. Xóa từng sản phẩm trong giỏ để thay đổi dữ liệu lưu trên trình duyệt.</p></>
       )}
       <a className="button" href="mailto:crackbeans.4t@gmail.com">
         Liên hệ cửa hàng <Mail size={18} />
