@@ -8,6 +8,8 @@ async function body(req: IncomingMessage) {
   return JSON.parse(text || '{}');
 }
 function send(res: ServerResponse, code: number, data: unknown) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options':'nosniff' }); res.end(JSON.stringify(data)); }
+// Trên Vercel req.socket có thể là null; IP thật nằm trong x-forwarded-for.
+const clientIp = (req: IncomingMessage) => String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'local';
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
     const url = new URL(req.url || '/', 'http://localhost');
@@ -25,7 +27,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const authenticated = token && (await query('SELECT expires FROM cb_sessions WHERE token = $1 AND expires > $2', [hash(token), Date.now()])).length > 0;
     if (path === '/api/session' && method === 'GET') return send(res, 200, { authenticated: !!authenticated, storage, configured: !!process.env.ADMIN_PASSWORD_HASH });
     if (path === '/api/login' && method === 'POST') {
-      const ip = process.env.VERCEL ? String(req.headers['x-forwarded-for'] || '').split(',')[0] : req.socket.remoteAddress || 'local';
+      const ip = clientIp(req);
       if (!await limit(`login:${ip}`, 10, 15 * 60000)) return send(res, 429, { error: 'Thử quá nhiều lần. Chờ 15 phút.' });
       const { password } = await body(req);
       const stored = process.env.ADMIN_PASSWORD_HASH;
@@ -51,7 +53,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const input = parsed.data;
       const [existing] = await query('SELECT id FROM cb_orders WHERE id = $1', [input.key]);
       if (existing) return send(res, 200, { id: input.key, status: 'pending' });
-      const ip = req.socket.remoteAddress || 'local';
+      const ip = clientIp(req);
       if (!await limit(`orders:${ip}`, 8, 3600000)) return send(res, 429, { error: 'Đã gửi nhiều yêu cầu. Vui lòng liên hệ cửa hàng.' });
       const { content } = await getContent();
       const missing = input.lines.find(line => !content.products.some((p: {id:string}) => p.id === line.id));
