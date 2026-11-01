@@ -2,3 +2,6 @@
 @media(max-width:800px){.admin-shell{grid-template-columns:1fr}.admin-sidebar{padding:20px}.admin-sidebar nav{display:flex;overflow:auto}.admin-sidebar nav button{white-space:nowrap}.admin-sidebar>small{margin-top:0}.admin-main{padding:32px 20px}.admin-header{align-items:start;flex-direction:column}.admin-stats{grid-template-columns:1fr}}
 .admin-login{min-height:calc(100vh - var(--header));display:grid;place-content:center;max-width:420px;margin:0 auto;padding:32px 20px}.admin-login-brand{font-family:var(--heading);font-size:22px;letter-spacing:.08em}.admin-login h1{font-size:32px;margin:28px 0 20px}.admin-login form{display:grid;gap:16px;margin:0;padding:0;background:transparent}.admin-login label{display:grid;gap:7px;font-size:13px;color:var(--ink-soft)}.admin-login input{border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);padding:13px;font:inherit}.admin-login .button{width:100%}
 .admin-login-brand{display:block;width:144px}.admin-login-brand img{display:block;width:144px;height:72px;object-fit:contain}.admin-login h1{text-transform:none}
+.admin-login{max-width:520px;width:calc(100% - 40px)}
+.admin-login form,.admin-login input,.admin-login .button{width:100%}
+.admin-login .button{min-height:52px}
