@@ -1,0 +1,12 @@
+import { randomBytes, scryptSync } from 'node:crypto';
+import { mkdir, writeFile, appendFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+await mkdir('.local',{recursive:true});
+if(existsSync('.local/admin-access.md')) throw new Error('Đã có tài khoản. Không tự ghi đè mật khẩu.');
+const password=randomBytes(18).toString('base64url');
+const salt=randomBytes(16).toString('hex');
+const hash=`${salt}:${scryptSync(password,salt,64).toString('hex')}`;
+await writeFile('.local/admin.hash',hash);
+await appendFile('.env.local',`\nADMIN_PASSWORD_HASH="${hash}"\n`);
+await writeFile('.local/admin-access.md',`# Truy cập quản trị Crack Beans\n\nURL: https://crackbeans.vercel.app/admin\n\nMật khẩu: ${password}\n\nThông tin riêng. File này bị loại khỏi Git. Session hết hạn sau 8 giờ.\n`);
+console.log('Đã tạo thông tin quản trị tại .local/admin-access.md; không hiển thị mật khẩu trong log.');
