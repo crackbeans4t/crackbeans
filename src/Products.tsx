@@ -30,7 +30,7 @@ export function ProductCard({
         </button>
       </div>
       <div className="product-meta">
-        <span>{product.category} · 250 g</span>
+        <div className="product-badges"><span className={`brand-badge ${product.category.toLowerCase()}`}>{product.category}</span><span className="pack-badge">250 g · 500 g</span></div>
         <h3>
           <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
         </h3>
@@ -94,6 +94,7 @@ export function ProductDetail({
 }) {
   const [image, setImage] = useState(0),
     [grind, setGrind] = useState<"Hạt" | "Bột">("Hạt"),
+    [size, setSize] = useState<"250g" | "500g">("250g"),
     [quantity, setQuantity] = useState(1);
   const cart = useCart();
   return (
@@ -131,18 +132,16 @@ export function ProductDetail({
         <p className="eyebrow">{product.category} / Archive Hybrid Coffee</p>
         {compact ? <h3>{product.name}</h3> : <h1>{product.name}</h1>}
         <p className="price">
-          {money(product.price)} <span>/ 250 g</span>
+          {money(product.price * (size === "500g" ? 2 : 1))} <span>/ {size === "500g" ? "500 g" : "250 g"}</span>
         </p>
         <p>{product.description}</p>
         <fieldset>
           <legend>Định lượng</legend>
           <div className="choice-row">
-            <span className="choice selected">250 g</span>
-            <span className="choice unavailable">500 g · liên hệ</span>
+            {(["250g", "500g"] as const).map((s) => <button type="button" key={s} aria-pressed={size === s} className={`choice ${size === s ? "selected" : ""}`} onClick={() => setSize(s)}>{s === "500g" ? "500 g" : "250 g"}</button>)}
           </div>
           <small>
-            Giá gói 500 g đang được đối chiếu. Gọi{" "}
-            <a href="tel:0767509715">076 750 9715</a> để được tư vấn.
+            Gói 500 g có giá gấp đôi gói 250 g.
           </small>
         </fieldset>
         <fieldset>
@@ -170,7 +169,7 @@ export function ProductDetail({
           <button
             className="button"
             onClick={() => {
-              cart.add(product.id, grind, quantity);
+              cart.add(product.id, grind, quantity, size);
               onAdded();
             }}
           >

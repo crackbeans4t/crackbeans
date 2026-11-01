@@ -57,7 +57,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const lines = input.lines.map(line => {
         const p = content.products.find((p: {id:string}) => p.id === line.id);
         if (!p) throw new Error('Sản phẩm không còn trong catalogue');
-        return { ...line, name: p.name, price: p.price };
+        return { ...line, name: p.name, price: p.price * (line.size === "500g" ? 2 : 1) };
       });
       const order = { ...input, lines, subtotal: lines.reduce((n, l) => n + l.price * l.quantity, 0), shipping: null, payment: 'cod' };
       await query('INSERT INTO cb_orders (id, payload, created_at, status) VALUES ($1,$2,$3,$4) ON CONFLICT(id) DO NOTHING', [input.key, JSON.stringify(order), new Date().toISOString(), 'pending']);

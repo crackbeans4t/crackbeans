@@ -33,7 +33,7 @@ export default function Checkout() {
         <button className="button full" disabled={busy}>{busy?'Đang gửi yêu cầu…':'Gửi yêu cầu đặt hàng COD'}</button><small className="muted">Chưa thu tiền tại bước này. Hotline: <a href="tel:0767509715">076 750 9715</a>.</small>
       </form>
       <aside className="checkout-summary"><p className="eyebrow">Gu cà phê của bạn</p><h2>Sản phẩm đã chọn <span>({cart.count})</span></h2>
-        {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>250 g · {line.grind} · {line.quantity} gói</small><strong>{money(p.price*line.quantity)}</strong></div></div>})}
+        {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind+line.size}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>{line.size === "500g" ? "500 g" : "250 g"} · {line.grind} · {line.quantity} gói</small><strong>{money(p.price*(line.size === "500g" ? 2 : 1)*line.quantity)}</strong></div></div>})}
         <div className="summary-totals"><div><span>Tạm tính</span><strong>{money(cart.total)}</strong></div><div><span>Phí vận chuyển</span><span>Xác nhận qua điện thoại</span></div><div className="summary-subtotal"><span>Tiền sản phẩm</span><strong>{money(cart.total)}</strong></div><small>Tổng thanh toán cuối cùng gồm tiền sản phẩm và phí giao hàng được xác nhận trước khi gửi.</small></div>
         <Link className="text-link" to="/san-pham">Chọn thêm cà phê</Link>
       </aside>

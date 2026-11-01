@@ -205,7 +205,7 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
           cart.lines.map((line) => {
             const p = data.products.find((p) => p.id === line.id)!;
             return (
-              <article className="cart-line" key={line.id + line.grind}>
+              <article className="cart-line" key={line.id + line.grind + line.size}>
                 <img
                   src={p.images[0].src}
                   alt={p.name}
@@ -218,18 +218,18 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
                       {p.name}
                     </Link>
                   </h3>
-                  <p>250 g / {line.grind}</p>
-                  <strong>{money(p.price * line.quantity)}</strong>
+                  <p>{line.size === "500g" ? "500 g" : "250 g"} / {line.grind}</p>
+                  <strong>{money(p.price * (line.size === "500g" ? 2 : 1) * line.quantity)}</strong>
                   <Quantity
                     value={line.quantity}
-                    onChange={(q) => cart.update(line.id, line.grind, q)}
+                    onChange={(q) => cart.update(line.id, line.grind, q, line.size)}
                     label={`Số lượng ${p.name} ${line.grind}`}
                   />
                 </div>
                 <button
                   className="icon-button remove-line"
                   aria-label={`Xóa ${p.name} ${line.grind}`}
-                  onClick={() => cart.update(line.id, line.grind, 0)}
+                  onClick={() => cart.update(line.id, line.grind, 0, line.size)}
                 >
                   <Trash2 size={18} />
                 </button>
