@@ -14,22 +14,30 @@ export default function Overlay({
   wide?: boolean;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const previousFocus=useRef<HTMLElement|null>(null);
+  const overflow=useRef('');
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (open) {
-      const previous = document.activeElement as HTMLElement | null;
-      el.showModal();
-      const before = document.body.style.overflow;
+      if(!el.open) {
+        previousFocus.current = document.activeElement as HTMLElement | null;
+        overflow.current = document.body.style.overflow;
+        el.showModal();
+      }
+      delete el.dataset.closing;
       document.body.style.overflow = "hidden";
-      return () => {
-        el.close();
-        document.body.style.overflow = before;
-        previous?.focus();
-      };
+    } else if(el.open) {
+      el.dataset.closing='true';
+      const timer=setTimeout(()=>{
+        el.close(); delete el.dataset.closing;
+        document.body.style.overflow=overflow.current;
+        previousFocus.current?.focus();
+      }, window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:180);
+      return()=>clearTimeout(timer);
     }
-    if (el.open) el.close();
   }, [open]);
+  useEffect(()=>()=>{if(ref.current?.open){ref.current.close();document.body.style.overflow=overflow.current;}},[]);
   return (
     <dialog
       ref={ref}
