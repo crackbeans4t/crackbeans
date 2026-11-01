@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import Overlay from "./Overlay";
 import Image from "./Image";
@@ -8,7 +8,6 @@ import { money } from "./store";
 import { minPrice, variantsOf } from "./catalog";
 import { grindFor, matchProduct, profiles, type QuizAnswers } from "./quizLogic";
 
-const SEEN = "cb-quiz-seen-v2";
 export const OPEN_QUIZ = "cb:open-quiz";
 
 type Option = { value: string; label: string; hint: string; tag?: string; img?: string };
@@ -62,7 +61,6 @@ function Meter({ label, value }: { label: string; value: number }) {
 export default function Quiz() {
   const { data } = useContent();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [screen, setScreen] = useState<"welcome" | "steps" | "result">("welcome");
   const [step, setStep] = useState(0);
@@ -79,28 +77,13 @@ export default function Quiz() {
       reset();
       setOpen(true);
     };
+    // Quiz chỉ mở khi khách bấm nút; không tự hiện khi vào web.
     window.addEventListener(OPEN_QUIZ, show);
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    try {
-      if (!localStorage.getItem(SEEN) && !/^\/(admin|thanh-toan)/.test(pathname)) timer = setTimeout(show, 1500);
-    } catch {
-      /* Không có localStorage thì không tự mở. */
-    }
-    return () => {
-      window.removeEventListener(OPEN_QUIZ, show);
-      clearTimeout(timer);
-    };
-    // Chỉ tự mở một lần khi vào trang.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => window.removeEventListener(OPEN_QUIZ, show);
   }, []);
 
   function close() {
     setOpen(false);
-    try {
-      localStorage.setItem(SEEN, "1");
-    } catch {
-      /* ignore */
-    }
   }
   function choose(value: string) {
     const q = questions[step];
