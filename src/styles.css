@@ -1726,3 +1726,18 @@ h1,h2,h3,h4,.logo,.desktop-nav a,.mobile-nav > a,.mobile-product-nav > a { font-
 .cart-count { top: 2px; right: 1px; }
 .header-actions .icon-button { flex: 0 0 48px; }
 @media (max-width:700px) { .header-actions { gap: 2px; } .cart-toggle { width:44px; height:44px; } .cart-count { top:0; right:-1px; } }
+/* CB-021: home responsive composition */
+.origin-number { display:none !important; }
+.origin-row { margin-top: 40px; }
+.hero-bg { object-position: 58% center; }
+@media (max-width:700px) {
+  .hero-bg { object-position: 62% center; }
+  .hero { min-height: 560px; }
+  .hero-content { padding-block: 56px 40px; }
+  .hero h1 { max-width: 14ch; font-size: clamp(32px, 9vw, 42px); }
+  .origin-row { margin-top: 32px; gap: 18px; }
+  .origin-row img { aspect-ratio: 1.35; }
+  .origin-row h3 { margin-top: 0; }
+  .featured-grid { grid-template-columns: 1fr 1fr; }
+  .product-photo { border-radius: 12px; }
+}

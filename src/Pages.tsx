@@ -100,7 +100,7 @@ export function Home({ onQuick }: QuickProps) {
               height="400"
             />
             <div>
-              <span className="origin-number">0{i + 1}</span>
+              
               <h3>{r.name}</h3>
               <p>{r.text}</p>
             </div>
@@ -419,3 +419,4 @@ export function Policy() {
     </section>
   );
 }
+
