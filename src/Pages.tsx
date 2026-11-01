@@ -56,7 +56,7 @@ export function Home({ onQuick }: QuickProps) {
             Tất cả sản phẩm
           </Link>
         </div>
-        <div className="featured-rail" tabIndex={0} aria-label="Sản phẩm nổi bật, cuộn ngang để xem thêm">
+        <div className="featured-products" aria-label="Sản phẩm nổi bật">
           {[...data.products].sort((a, b) => Number(b.category === "Arabica") - Number(a.category === "Arabica")).map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
           ))}
@@ -255,12 +255,14 @@ export function Shop({ onQuick }: QuickProps) {
         <Image
           src={data.assets.shop}
           alt="Bộ sưu tập cà phê Crack Beans"
+          sizes="100vw"
+          fetchPriority="high"
           width="1440"
           height="280"
         />
         <div className="container">
           <p className="eyebrow">Archive Hybrid Coffee</p>
-          <h1>Cà phê nguyên bản</h1>
+          <h1>Cà phê rang mộc nguyên bản</h1>
         </div>
       </section>
       <section className="container page-space">
@@ -290,6 +292,7 @@ export function Shop({ onQuick }: QuickProps) {
           <p className="muted">{products.length} sản phẩm</p>
           <SortMenu value={sort} onChange={setSort} />
         </div>
+        <h2 className="visually-hidden">Danh sách sản phẩm</h2>
         <div className="product-grid">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
@@ -310,7 +313,7 @@ export function Blog() {
   return (
     <section className="container page-space blog-head">
       <p className="eyebrow">Chuyện cà phê</p>
-      <h1>Góc cà phê Crack Beans</h1>
+      <h1>Kiến thức cà phê Crack Beans</h1>
       <div className="blog-grid">
         {data.articles.map((p, i) => (
           <article className="blog-card" key={p.id}>
@@ -324,7 +327,7 @@ export function Blog() {
               />
             </Link>
             <p className="eyebrow">
-              {i === 0 ? "Pha chế · 2 phút đọc" : "Hạt cà phê · 3 phút đọc"}
+              {`${Math.max(1, Math.round(p.text.split(/\s+/).length / 220))} phút đọc`}
             </p>
             <h2>
               <Link to={`/blog/${p.id}`}>{p.title}</Link>
@@ -355,16 +358,34 @@ function parseArticle(text: string): Block[] {
   }
   return blocks;
 }
+// Inline markup: [label](/internal-path) becomes a router link.
+function Inline({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\(\/[^)\s]*\))/);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const m = /^\[([^\]]+)\]\((\/[^)\s]*)\)$/.exec(part);
+        return m ? (
+          <Link key={i} to={m[2]}>
+            {m[1]}
+          </Link>
+        ) : (
+          part
+        );
+      })}
+    </>
+  );
+}
 function Paragraph({ text, lead = false }: { text: string; lead?: boolean }) {
-  const m = /^([^:]{2,24}):\s*(.+)$/s.exec(text);
+  const m = /^([^:[\]]{2,24}):\s*(.+)$/s.exec(text);
   return (
     <p className={lead ? "article-lead" : undefined}>
       {m ? (
         <>
-          <strong>{m[1]}:</strong> {m[2]}
+          <strong>{m[1]}:</strong> <Inline text={m[2]} />
         </>
       ) : (
-        text
+        <Inline text={text} />
       )}
     </p>
   );
@@ -390,6 +411,8 @@ export function Post() {
       <Image
         className="article-cover"
         src={post.image}
+        sizes="(min-width: 800px) 760px, calc(100vw - 40px)"
+        fetchPriority="high"
         alt={post.title}
         width="1000"
         height="560"

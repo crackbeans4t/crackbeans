@@ -285,6 +285,14 @@ legend {
 .icon-button:hover {
   background: #2f21160f;
 }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 .skip-link {
   position: fixed;
   left: 16px;
@@ -446,7 +454,7 @@ legend {
   height: 19px;
   padding: 0 4px;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--price);
   color: #fff;
   font-size: 11px;
   font-weight: 600;
@@ -1293,6 +1301,14 @@ legend {
 .article strong {
   color: var(--ink);
 }
+.article p a {
+  color: var(--accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.article p a:hover {
+  color: var(--ink);
+}
 .article > .button {
   margin-top: 40px;
 }
@@ -2013,3 +2029,8 @@ legend {
     scroll-behavior: auto !important;
   }
 }
+.featured-products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 24px}
+.product-image-cart{position:absolute;right:12px;bottom:12px;width:44px;height:44px;padding:0;display:grid;place-items:center;background:var(--paper);border:0;border-radius:12px;box-shadow:0 2px 8px #2f21161a}
+.product-image-cart:hover{background:var(--ink);color:var(--paper);border-radius:12px}
+.product-image-cart svg{display:block}
+@media(max-width:700px){.featured-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}.product-image-cart{right:8px;bottom:8px}}

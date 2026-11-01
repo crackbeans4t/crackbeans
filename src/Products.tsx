@@ -1,6 +1,6 @@
 import Image from "./Image";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { type Product, useCart, money } from "./store";
 export function ProductCard({
@@ -11,7 +11,6 @@ export function ProductCard({
   onQuick: (p: Product) => void;
 }) {
   const cart = useCart();
-  const navigate = useNavigate();
   return (
     <article className="product-card">
       <div className="product-photo">
@@ -26,20 +25,14 @@ export function ProductCard({
           />
           <Image className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
         </Link>
+        <button className="icon-button product-image-cart" aria-label={`Thêm ${product.name} (Hạt 250 g) vào giỏ`} title="Thêm vào giỏ" onClick={() => cart.add(product.id, "Hạt", 1)}><ShoppingCart size={20} aria-hidden="true" /></button>
       </div>
       <div className="product-meta">
         <h3>
           <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
         </h3>
         <p className="card-price">{money(product.price)} <span>/ 250 g</span></p>
-        <div className="card-actions">
-          <button className="button button-sm" onClick={() => { cart.add(product.id, "Hạt", 1); navigate("/thanh-toan"); }}>
-            Mua ngay
-          </button>
-          <button className="icon-button card-cart" aria-label={`Thêm ${product.name} (Hạt 250 g) vào giỏ`} title="Thêm vào giỏ" onClick={() => cart.add(product.id, "Hạt", 1)}>
-            <ShoppingCart size={20} aria-hidden="true" />
-          </button>
-        </div>
+
       </div>
     </article>
   );
@@ -99,7 +92,6 @@ export function ProductDetail({
     [size, setSize] = useState<"250g" | "500g">("250g"),
     [quantity, setQuantity] = useState(1);
   const cart = useCart();
-  const navigate = useNavigate();
   return (
     <div className={`product-detail ${compact ? "compact" : ""}`}>
       <div className="gallery">
