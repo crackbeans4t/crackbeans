@@ -1651,7 +1651,7 @@ legend {
   border-top: 1px solid var(--line);
   font-size: 12px;
   letter-spacing: 0.05em;
-  color: var(--muted);
+  color: var(--ink-soft);
 }
 
 /* ---------- Toast & motion ---------- */
