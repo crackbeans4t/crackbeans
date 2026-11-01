@@ -1,3 +1,4 @@
+import Image from "./Image";
 import { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
@@ -11,8 +12,9 @@ export function Home({ onQuick }: QuickProps) {
   return (
     <>
       <section className="hero">
-        <img
+        <Image
           className="hero-bg"
+          sizes="100vw"
           src={data.assets.hero}
           alt="Bột cà phê rang mộc Crack Beans"
           fetchPriority="high"
@@ -67,7 +69,7 @@ export function Home({ onQuick }: QuickProps) {
         </div>
       </section>
       <section className="origin-quote">
-        <img
+        <Image
           src={data.assets.seed}
           alt="Mầm cây non mọc từ đất"
           width="1440"
@@ -90,7 +92,7 @@ export function Home({ onQuick }: QuickProps) {
         </div>
         {data.regions.map((r, i) => (
           <article className="origin-row" key={r.name}>
-            <img
+            <Image
               src={r.image}
               alt={`Vùng nguyên liệu ${r.name}`}
               loading="lazy"
@@ -144,7 +146,7 @@ export function About() {
             Khám phá sản phẩm <ArrowRight size={18} />
           </Link>
         </div>
-        <img
+        <Image
           src={data.assets.about}
           alt="Câu chuyện cà phê Crack Beans"
           width="700"
@@ -157,7 +159,7 @@ export function About() {
         <div className="values-grid">
           {values.map(([title, text], i) => (
             <article key={title}>
-              <img
+              <Image
                 src={data.assets.values[i]}
                 alt={title}
                 loading="lazy"
@@ -199,7 +201,7 @@ export function Shop({ onQuick }: QuickProps) {
   return (
     <>
       <section className="shop-banner">
-        <img
+        <Image
           src={data.assets.shop}
           alt="Bộ sưu tập cà phê Crack Beans"
           width="1440"
@@ -267,7 +269,7 @@ export function Blog() {
         {data.articles.map((p, i) => (
           <article className="blog-card" key={p.id}>
             <Link to={`/blog/${p.id}`}>
-              <img
+              <Image
                 src={p.image}
                 alt={p.title}
                 width="700"
@@ -309,7 +311,7 @@ export function Post() {
         ← Tất cả bài viết
       </Link>
       <h1>{post.title}</h1>
-      <img
+      <Image
         className="article-cover"
         src={post.image}
         alt={post.title}
@@ -333,7 +335,7 @@ export function Post() {
           <div>
             {post.steps.map((src, i) => (
               <figure key={src}>
-                <img
+                <Image
                   src={src}
                   alt={`Hướng dẫn pha phin — bước ${i + 1}`}
                   width="900"

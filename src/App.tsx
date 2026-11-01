@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import {
   Link,
   NavLink,
@@ -22,12 +22,11 @@ import { CartProvider, useCart, money, type Product } from "./store";
 import Overlay from "./Overlay";
 import { ProductCard, ProductDetail, Quantity } from "./Products";
 import { Home, About, Shop, Blog, Post, Contact, Policy } from "./Pages";
-import Admin from "./Admin";
-import CheckoutPage from './Checkout';
+const Admin=lazy(()=>import('./Admin'));
+const CheckoutPage=lazy(()=>import('./Checkout'));
 import Seo from './Seo';
 import { ContentProvider, useContent } from './content';
 import { AnimateUIProvider } from "@animate-ui/react/provider";
-import { Fade } from "@animate-ui/react/primitives/effects/fade";
 export const navigation = [
   ["/", "Trang chủ"],
   ["/ve-chung-toi", "Về chúng tôi"],
@@ -301,13 +300,13 @@ function Site() {
     setCartOpen(false);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
-  if(location.pathname==='/admin') return <><Seo/><Admin/></>;
+  if(location.pathname==='/admin') return <><Seo/><Suspense fallback={<p className="container page-space">Đang mở CMS…</p>}><Admin/></Suspense></>;
   return (
     <>
       <Seo />
       <Header onCart={() => setCartOpen(true)} />
       <main id="main">
-        <Fade inView={false} initialOpacity={0} opacity={1} transition={{ duration: 0.3, ease: "easeOut" }}>
+        <div className="route-content">
         <Routes>
           <Route path="/" element={<Home onQuick={setQuick} />} />
           <Route path="/san-pham" element={<Shop onQuick={setQuick} />} />
@@ -320,11 +319,11 @@ function Site() {
           <Route path="/blog/:id" element={<Post />} />
           <Route path="/lien-he" element={<Contact />} />
           <Route path="/chinh-sach/:id" element={<Policy />} />
-          <Route path="/thanh-toan" element={<CheckoutPage />} />
+          <Route path="/thanh-toan" element={<Suspense fallback={<p className="container page-space">Đang mở thông tin giao hàng…</p>}><CheckoutPage /></Suspense>} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        </Fade>
+        </div>
       </main>
       <Footer />
       <Overlay

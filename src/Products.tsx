@@ -1,3 +1,4 @@
+import Image from "./Image";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Minus, Plus, ShoppingCart } from "lucide-react";
@@ -14,14 +15,15 @@ export function ProductCard({
     <article className="product-card">
       <div className="product-photo">
         <Link to={`/san-pham/${product.id}`} aria-label={`Xem ${product.name}`}>
-          <img
+          <Image
             src={product.images[0].src}
+            sizes="(min-width: 1200px) 400px, (min-width: 701px) 33vw, 50vw"
             alt={product.images[0].alt}
             width="700"
             height="700"
             loading="lazy"
           />
-          <img className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
+          <Image className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
         </Link>
         <button className="quick-button quick-add" aria-label={`Thêm nhanh ${product.name}, Hạt 250 g`} title="Thêm nhanh 1 gói Hạt 250 g" onClick={() => cart.add(product.id, "Hạt", 1)}>
           <ShoppingCart size={20} aria-hidden="true" />
@@ -97,7 +99,7 @@ export function ProductDetail({
   return (
     <div className={`product-detail ${compact ? "compact" : ""}`}>
       <div className="gallery">
-        <img
+        <Image
           className="main-product-image"
           src={product.images[image].src}
           alt={product.images[image].alt}
@@ -112,7 +114,7 @@ export function ProductDetail({
               aria-pressed={image === i}
               onClick={() => setImage(i)}
             >
-              <img src={img.src} alt="" width="64" height="64" />
+              <Image src={img.src} alt="" width="64" height="64" />
             </button>
           ))}
         </div>
