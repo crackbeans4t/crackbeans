@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import Overlay from "./Overlay";
 import Image from "./Image";
@@ -61,6 +61,7 @@ function Meter({ label, value }: { label: string; value: number }) {
 export default function Quiz() {
   const { data } = useContent();
   const navigate = useNavigate();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [screen, setScreen] = useState<"welcome" | "steps" | "result">("welcome");
   const [step, setStep] = useState(0);
@@ -81,6 +82,15 @@ export default function Quiz() {
     window.addEventListener(OPEN_QUIZ, show);
     return () => window.removeEventListener(OPEN_QUIZ, show);
   }, []);
+  // Link "/?grind-match" (ví dụ trong bài blog) mở quiz khi khách bấm vào.
+  useEffect(() => {
+    if (new URLSearchParams(location.search).has("grind-match")) {
+      reset();
+      setOpen(true);
+      navigate(location.pathname, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   function close() {
     setOpen(false);
