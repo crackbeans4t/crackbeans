@@ -61,7 +61,7 @@ export function Home({ onQuick }: QuickProps) {
           </Link>
         </div>
         <div className="featured-grid">
-          {[data.products[5], data.products[4]].map((p) => (
+          {data.products.filter(p=>p.category==='Arabica').slice(0,2).map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
           ))}
         </div>
@@ -302,7 +302,7 @@ export function Post() {
       </section>
     );
   const body =
-    post.text.split("phút đọc")[1]?.split("Bài đăng gần đây")[0] || "";
+    post.text.split("phút đọc")[1]?.split("Bài đăng gần đây")[0] || post.text;
   return (
     <article className="article container page-space">
       <Link className="text-link" to="/blog">

@@ -10,7 +10,7 @@
     "test": "tsx --test src/store.test.ts",
     "dev": "vite",
     "cms:dev": "tsx server/dev.ts",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && vite build --ssr src/entry-server.tsx --outDir .local/ssr && node scripts/prerender.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "verify": "node scripts/verify-data.mjs",
     "format": "prettier --write src vite.config.ts tsconfig.json"

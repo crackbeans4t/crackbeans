@@ -14,7 +14,7 @@ export const money = (value: number) =>
   new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
     value,
   );
-export function parseCart(raw: string | null): CartLine[] {
+export function parseCart(raw: string | null, products: Product[] = data.products): CartLine[] {
   try {
     const input: unknown = JSON.parse(raw || "[]");
     if (!Array.isArray(input)) return [];
@@ -23,7 +23,7 @@ export function parseCart(raw: string | null): CartLine[] {
         (x): x is CartLine =>
           !!x &&
           typeof x === "object" &&
-          data.products.some((p) => p.id === x.id) &&
+          products.some((p) => p.id === x.id) &&
           (x.grind === "Hạt" || x.grind === "Bột") &&
           Number.isInteger(x.quantity) &&
           x.quantity > 0 &&
@@ -37,9 +37,9 @@ export function parseCart(raw: string | null): CartLine[] {
     return [];
   }
 }
-function loadCart() {
+function loadCart(products: Product[] = data.products) {
   try {
-    return parseCart(localStorage.getItem(KEY));
+    return parseCart(localStorage.getItem(KEY), products);
   } catch {
     return [];
   }
@@ -52,15 +52,18 @@ const CartContext = createContext<{
   total: number;
 } | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
-  const {data:catalogue}=useContent();
-  const [lines, setLines] = useState<CartLine[]>(loadCart);
+  const {data:catalogue, ready}=useContent();
+  const [lines, setLines] = useState<CartLine[]>([]);
+  const [hydrated,setHydrated] = useState(false);
+  useEffect(() => { if(ready) {setLines(loadCart(catalogue.products)); setHydrated(true);} }, [ready,catalogue.products]);
   useEffect(() => {
+    if(!hydrated) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(lines));
     } catch {
       /* Cart remains usable when browser storage is unavailable. */
     }
-  }, [lines]);
+  }, [lines,hydrated]);
   function add(id: string, grind: CartLine["grind"], quantity: number) {
     setLines((old) => {
       const exists = old.find((l) => l.id === id && l.grind === grind);

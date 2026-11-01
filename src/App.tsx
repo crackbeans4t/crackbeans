@@ -18,13 +18,13 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import data from "./data.json";
 import { CartProvider, useCart, money, type Product } from "./store";
 import Overlay from "./Overlay";
 import { ProductCard, ProductDetail, Quantity } from "./Products";
 import { Home, About, Shop, Blog, Post, Contact, Policy } from "./Pages";
 import Admin from "./Admin";
 import CheckoutPage from './Checkout';
+import Seo from './Seo';
 import { ContentProvider, useContent } from './content';
 import { AnimateUIProvider } from "@animate-ui/react/provider";
 import { Fade } from "@animate-ui/react/primitives/effects/fade";
@@ -263,69 +263,6 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
     </Overlay>
   );
 }
-function Checkout() {
-  const {data}=useContent();
-  const cart = useCart();
-  return (
-    <div className="container checkout page-space">
-      <p className="eyebrow">Giỏ hàng / Xác nhận lựa chọn</p>
-      <h1>Thông tin thanh toán</h1>
-      {!cart.count ? (
-        <div className="empty-state">
-          <p>Giỏ hàng đang trống.</p>
-          <Link className="button" to="/san-pham">
-            Xem sản phẩm
-          </Link>
-        </div>
-      ) : (
-        <div className="checkout-grid">
-          <section className="checkout-notice">
-            <ShoppingBag size={30} />
-            <h2>Hoàn tất đặt hàng cùng Crack Beans</h2>
-            <p>
-              Thanh toán trực tuyến chưa được kết nối. Danh sách bên cạnh là lựa
-              chọn của bạn, chưa phải đơn hàng đã gửi.
-            </p>
-            <p>
-              Liên hệ cửa hàng để xác nhận sản phẩm, phí giao hàng và hình thức
-              thanh toán.
-            </p>
-            <a className="button" href="tel:0767509715">
-              <Phone size={18} /> Gọi 076 750 9715
-            </a>
-            <a className="text-link" href="mailto:crackbeans.4t@gmail.com">
-              <Mail size={18} /> crackbeans.4t@gmail.com
-            </a>
-          </section>
-          <section className="order-summary">
-            <h2>Sản phẩm đã chọn</h2>
-            {cart.lines.map((l) => (
-              <div className="summary-line" key={l.id + l.grind}>
-                <span>
-                  {data.products.find((p) => p.id === l.id)!.name}
-                  <small>
-                    250 g · {l.grind} · × {l.quantity}
-                  </small>
-                </span>
-                <strong>
-                  {money(
-                    data.products.find((p) => p.id === l.id)!.price *
-                      l.quantity,
-                  )}
-                </strong>
-              </div>
-            ))}
-            <div className="total-row">
-              <span>Tạm tính</span>
-              <strong>{money(cart.total)}</strong>
-            </div>
-            <p className="muted">Phí vận chuyển: cửa hàng xác nhận.</p>
-          </section>
-        </div>
-      )}
-    </div>
-  );
-}
 function DetailPage({ onAdded }: { onAdded: () => void }) {
   const {data}=useContent();
   const { id } = useParams();
@@ -360,20 +297,13 @@ function Site() {
     [quick, setQuick] = useState<Product | null>(null);
   const location = useLocation();
   useEffect(() => {
-    const titles: Record<string, string> = { "/": "Crack Beans — Cà phê rang mộc Việt Nam", "/san-pham": "Sản phẩm cà phê — Crack Beans", "/blog": "Góc cà phê — Crack Beans", "/lien-he": "Liên hệ — Crack Beans", "/admin": "CMS catalogue — Crack Beans" };
-    const title = titles[location.pathname] || "Crack Beans — Archive Hybrid Coffee";
-    document.title = title;
-    let meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
-    meta.content = "Crack Beans — cà phê rang mộc Việt Nam, minh bạch vùng nguyên liệu, pha chậm và giữ trọn hương vị nguyên bản.";
-  }, [location.pathname]);
-  useEffect(() => {
     setQuick(null);
     setCartOpen(false);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
   return (
     <>
+      <Seo />
       <Header onCart={() => setCartOpen(true)} />
       <main id="main">
         <Fade inView={false} initialOpacity={0} opacity={1} transition={{ duration: 0.3, ease: "easeOut" }}>
