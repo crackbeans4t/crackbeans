@@ -1,0 +1,170 @@
+[
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "home",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "shop",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "about",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "product",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "blog",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "mobile",
+    "page": "contact",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "home",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "shop",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "about",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "product",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "blog",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "desktop",
+    "page": "contact",
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "home",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "shop",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "about",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "product",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "blog",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "browser": "Codex",
+    "viewport": "tablet",
+    "page": "contact",
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  }
+]

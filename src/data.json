@@ -1,0 +1,167 @@
+{
+  "products": [
+    {
+      "id": "robusta-clean-daklak",
+      "name": "ROBUSTA CLEAN DAKLAK",
+      "price": 120000,
+      "category": "Robusta",
+      "description": "Sơ chế sạch, mức rang đậm, hương vị mạnh mẽ đánh thức mọi giác quan. Phù hợp pha phin truyền thống hoặc espresso đậm vị.",
+      "images": [
+        {
+          "src": "/assets/robusta-clean-daklak-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Robusta Clean Daklak (SKU: ROB-DKL) với nhãn đỏ đặc trưng của CRACK BEANS."
+        },
+        {
+          "src": "/assets/robusta-clean-daklak-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế chi tiết cho dòng sản phẩm số 1 Robusta Clean Daklak của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/gi%C3%A0y-sneaker-minimalist"
+    },
+    {
+      "id": "robusta-clean-rang-bo",
+      "name": "ROBUSTA CLEAN 100% RANG BƠ",
+      "price": 110000,
+      "category": "Robusta",
+      "description": "Sự kết hợp giữa hạt Robusta tuyển chọn và phương pháp rang tẩm bơ thủ công. Mang hương thơm béo ngậy đặc trưng, hậu vị sâu đậm, đậm chất văn hóa cà phê truyền thống Việt Nam.",
+      "images": [
+        {
+          "src": "/assets/robusta-rang-bo-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Robusta Clean 100% Rang Bơ (SKU: ROB-BUT) của CRACK BEANS."
+        },
+        {
+          "src": "/assets/robusta-rang-bo-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế cho dòng sản phẩm số 2 Robusta Clean Rang Bơ của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/robusta-clean-100-rang-b%C6%A1"
+    },
+    {
+      "id": "robusta-honey-99",
+      "name": "ROBUSTA HONEY 99%",
+      "price": 140000,
+      "category": "Robusta",
+      "description": "Sơ chế mật ong đỏ/vàng từ hạt chín cao nguyên. Mang nốt hương mật ong rừng và trái cây sấy, hậu vị ngọt sâu mượt mà.",
+      "images": [
+        {
+          "src": "/assets/robusta-honey-99-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Robusta Honey 99% (SKU: ROB-HNY) với nhãn vàng nâu đặc trưng của CRACK BEANS."
+        },
+        {
+          "src": "/assets/robusta-honey-99-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế cho dòng sản phẩm số 3 Robusta Honey 99% của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/robusta-honey-99"
+    },
+    {
+      "id": "robusta-se",
+      "name": "ROBUSTA SẺ",
+      "price": 130000,
+      "category": "Robusta",
+      "description": "Hạt Robusta sẻ nguyên bản, mộc hoàn toàn không tẩm ướp. Vị đắng đậm đà, mượt mà, giữ trọn vẹn nét mộc mạc của thổ nhưỡng cao nguyên.",
+      "images": [
+        {
+          "src": "/assets/robusta-se-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Robusta Sẻ (SKU: ROB-SE-ARC) với nhãn màu xanh olive đặc trưng của thương hiệu CRACK BEANS."
+        },
+        {
+          "src": "/assets/robusta-se-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế cho dòng sản phẩm số 4 Robusta Sẻ của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/robusta-s%E1%BA%BB"
+    },
+    {
+      "id": "arabica-dark-roast-s18",
+      "name": "ARABICA DARK ROAST S18",
+      "price": 160000,
+      "category": "Arabica",
+      "description": "Kích thước hạt tuyển chọn, rang đậm (Dark Roast) giúp giảm vị chua, tôn lên nốt hương cacao đắng nhẹ hòa quyện vị ngọt hậu sâu lắng. Nền hoàn hảo cho Latte, Cappuccino & Americano.",
+      "images": [
+        {
+          "src": "/assets/arabica-dark-roast-s18-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Arabica Dark Roast S18 (SKU: AR-DRK-S18) của CRACK BEANS đặt trên nền hạt cà phê."
+        },
+        {
+          "src": "/assets/arabica-dark-roast-s18-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế cho dòng sản phẩm số 5 Arabica Dark Roast S18 của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/arabica-dark-roast-s18"
+    },
+    {
+      "id": "specialty-nui-min",
+      "name": "SPECIALTY NÚI MIN",
+      "price": 190000,
+      "category": "Arabica",
+      "description": "Dòng cà phê đặc sản cao cấp khai thác từ vùng đất Núi Min. Mang nốt hương hoa trắng và cam chanh, phức hợp tầng vị tinh tế, tiêu chuẩn thưởng thức đương đại.",
+      "images": [
+        {
+          "src": "/assets/specialty-nui-min-1.webp",
+          "alt": "Túi zip mờ đựng cà phê Specialty Núi Min (SKU: Specialty-NMI) của CRACK BEANS đặt trên nền hạt cà phê rang."
+        },
+        {
+          "src": "/assets/specialty-nui-min-2.webp",
+          "alt": "Bảng hướng dẫn thông số và quy trình pha chế cho dòng sản phẩm số 6 Specialty Núi Min của CRACK BEANS."
+        }
+      ],
+      "source": "https://vohoangnhuanchi.wixsite.com/website/product-page/specialty-n%C3%BAi-min"
+    }
+  ],
+  "assets": {
+    "logo": "/assets/7118ee_66758ac8f82e45798acc7b5dc465f79f~mv2.webp",
+    "hero": "/assets/coffee-ground-hero.webp",
+    "seed": "/assets/coffee-seedlings.webp",
+    "regions": [
+      "/assets/region-dak-lak.webp",
+      "/assets/region-cau-dat.webp",
+      "/assets/region-nui-min.webp"
+    ],
+    "about": "/assets/7118ee_32d177233815448eb661693d9a46c10c~mv2.webp",
+    "values": [
+      "/assets/7118ee_82c5086ac4ed4802893a8883813b2730~mv2.webp",
+      "/assets/7118ee_fa2c8955d0174285854b832abe15e1f6~mv2.webp",
+      "/assets/7118ee_a4f1c8dba6f94b0eb2c170989033dc43~mv2.webp"
+    ],
+    "shop": "/assets/7118ee_b03ac119f58c4aafacf614b7d3e93e8b~mv2.webp"
+  },
+  "regions": [
+    {
+      "name": "ĐẮK LẮK",
+      "text": "Đắk Lắk, vùng đất bazan trù phú của Tây Nguyên, là một trong những vùng trồng cà phê nổi tiếng nhất Việt Nam. Nắng ấm, mùa mưa rõ rệt và đất đỏ giàu dưỡng chất tạo điều kiện lý tưởng cho cây cà phê phát triển, mang đến những hạt cà phê đậm đà, hương thơm mạnh mẽ và hậu vị đặc trưng của cao nguyên.",
+      "image": "/assets/region-dak-lak.webp"
+    },
+    {
+      "name": "CẦU ĐẤT",
+      "text": "Vùng đất cao nguyên mát lành của Việt Nam, nổi tiếng với những đồi cà phê xanh trải dài trong sương sớm. Độ cao, khí hậu se lạnh và thổ nhưỡng giàu dưỡng chất nơi đây tạo nên những hạt cà phê có hương thơm thanh sạch, vị cân bằng và hậu vị tinh tế - một dấu ấn đặc trưng của vùng trồng cà phê Cầu Đất.",
+      "image": "/assets/region-cau-dat.webp"
+    },
+    {
+      "name": "NÚI MIN",
+      "text": "Núi Min hiện lên với vẻ đẹp hùng vĩ và nguyên sơ của vùng cao nguyên. Những triền núi xanh, không khí trong lành cùng nhịp sống chậm rãi tạo nên một không gian đặc biệt - nơi thiên nhiên nuôi dưỡng cảm hứng và góp phần làm nên câu chuyện riêng của những hạt cà phê Việt Nam.",
+      "image": "/assets/region-nui-min.webp"
+    }
+  ],
+  "articles": [
+    {
+      "id": "pha-phin",
+      "title": "Bí Quyết Pha Phin Ngon Chuẩn Vị Với 5 Bước Đơn Giản Cùng CRACK BEANS",
+      "text": "All Posts\nBí Quyết Pha Phin Ngon Chuẩn Vị Với 5 Bước Đơn Giản Cùng CRACK BEANS\nvohoangnhuanchi\n3 ngày trước\n2 phút đọc\n\nHướng dẫn chi tiết quy trình 5 bước pha phin truyền thống chuẩn xác theo tiêu chuẩn của CRACK BEANS. Tối ưu nhiệt độ nước, thao tác ủ và chiết xuất để khai thác trọn vẹn hương vị cà phê mộc nguyên bản.\n\n \n\n\n\n\tPha phin là nét văn hóa thưởng thức cà phê đặc trưng của người Việt. Để có được một ly cà phê thơm ngon, đậm đà và giữ trọn vẹn hương vị mộc nguyên bản, việc tuân thủ đúng kỹ thuật từng bước là vô cùng quan trọng. \n\n\n\n\nTại CRACK BEANS, mỗi dòng sản phẩm tuyển chọn đều mang lại trải nghiệm trọn vẹn nhất khi được pha chế đúng cách. Dưới đây là hướng dẫn chi tiết quy trình 5 bước pha phin chuẩn xác giúp bạn tự tay pha chế những ly cà phê hoàn hảo ngay tại nhà.\n\n\n\nHướng Dẫn Các Bước Pha Phin Chuẩn Xác\n\n\n\nBước 1\n\nThao tác: Làm nóng phin và ly bằng nước sôi, sau đó lau khô (giúp giữ nhiệt độ ổn định trong suốt quá trình chiết xuất). Cho lượng cà phê vừa đủ vào phin và lắc nhẹ để bột cà phê trải đều bề mặt.\n\n\n\n\nBước 2\n\nThao tác: Đặt nhẹ nắp gài (nắp nén) lên trên bề mặt bột cà phê. Ấn nhẹ tay để cố định lớp bột, giúp nước thấm đều và không bị nổi bọt khí khi rót nước.\n\n\n\n\n\n\n\n\nBước 3\n\nThao tác: Rót lần 1 khoảng 30ml nước nóng (nhiệt độ chuẩn từ 90°C - 95°C) theo vòng tròn trên đế và đều khắp bề mặt để nước thấm đều vào bột cà phê.\n\nĐậy nắp và ủ trong khoảng 45 - 60 giây để bột cà phê hấp thụ nước, nở đều và giải phóng tối đa tầng hương thơm.\n\n\n\n\nBước 4\n\nThao tác: Rót tiếp khoảng 40ml nước nóng nữa theo vòng tròn đều đặn để nước tiếp tục ngấm sâu và chiết xuất trọn vẹn tinh chất cà phê.\n\nĐậy nắp lại và chờ đợi quá trình nhỏ giọt hoàn tất (tổng thời gian chiết xuất dao động từ 4 đến 5 phút).\n\nBước 5 — Thưởng thức\n\n\n \n\n\tPha một ly cà phê phin ngon không chỉ là kỹ thuật, mà còn là một nghệ thuật thư giãn. Với quy trình 5 bước chuẩn xác trên từ CRACK BEANS, chúc bạn sẽ luôn tự tay pha chế thành công những ly cà phê mộc nguyên bản, đậm đà và trọn vẹn cảm xúc mỗi ngày!\n\n \n \n \nBài đăng gần đây\nXem tất cả\nKhám Phá 6 Dòng Hạt Cà Phê Mộc Chủ Lực Tại CRACK BEANS\n \n \n ",
+      "image": "/assets/blog-phin.webp",
+      "steps": [
+        "/assets/phin-step-1.webp",
+        "/assets/phin-step-2.webp",
+        "/assets/phin-step-3.webp",
+        "/assets/phin-step-4.webp",
+        "/assets/phin-step-5.webp"
+      ]
+    },
+    {
+      "id": "sau-dong-ca-phe",
+      "title": "Khám Phá 6 Dòng Hạt Cà Phê Mộc Chủ Lực Tại CRACK BEANS",
+      "text": "All Posts\nKhám Phá 6 Dòng Hạt Cà Phê Mộc Chủ Lực Tại CRACK BEANS\nvohoangnhuanchi\n3 ngày trước\n3 phút đọc\n\nTìm hiểu ngay 6 dòng hạt cà phê nguyên bản tại CRACK BEANS: từ Robusta Clean đậm đà, Robusta bơ truyền thống đến Arabica Cầu Đất và Specialty Núi Min. Thông tin minh bạch, hương vị rõ ràng.\n\n \n\n\n\n\tKhi thưởng thức một ly cà phê ngon, điều đầu tiên bạn cần biết không phải là những lời quảng cáo hào nhoáng, mà là nguồn gốc và thông số rõ ràng của hạt cà phê. Tại CRACK BEANS, chúng tôi theo đuổi phong cách tối giản công nghiệp (Industrial Minimalism) và sự minh bạch tuyệt đối. \n\n\n\n\n\tMỗi gói cà phê đến tay bạn đều được định danh rõ ràng về vùng trồng, độ cao, phương pháp sơ chế và mức độ rang. Dưới đây là 6 dòng sản phẩm chủ lực được tuyển chọn kỹ lưỡng để đáp ứng mọi khẩu vị từ truyền thống đến hiện đại.\n\n\n\n1. Robusta Clean DakLak\nRobusta Clean Daklak\nĐậm đà, mạnh mẽ \n\nĐặc điểm:Sơ chế ướt sạch, mức rang đậm. \n\nHương vị: Nốt cacao đậm, vị đắng mạnh mẽ và lớp body dày dặn, hậu vị chocolate đen kéo dài. \n\nPhù hợp nhất với: Người thích pha phin truyền thống hoặc espresso đậm vị để khởi đầu ngày mới năng động.\n\n\n\n\n\nTìm hiểu thêm\n\n\nRobusta Clean 100% Rang Bơ\nChuẩn vị truyền thống\n\nĐặc điểm:Sự kết hợp giữa hạt Robusta tuyển chọn và phương pháp rang tẩm bơ thủ công.\n\nHương vị: Thơm béo mùi bơ Pháp, vị đắng đậm đà hòa quyện cùng hậu vị caramel ngọt ngào. \n\nPhù hợp nhất với: Những ai yêu thích ly cà phê sữa đá đậm đà, béo ngậy đúng chất Sài Gòn.\n\n\n\nTìm hiểu thêm\n\n\nRobusta Clean 100% Rang Bơ\n\n\nRobusta Honey 99%\n\nNgọt ngào hương mật ong\n\nSơ chế mật ong đỏ/vàng từ hạt chín cao nguyên. Mang nốt hương mật ong rừng và trái cây sấy, hậu vị ngọt sâu mượt mà.\n\nRobusta Sẻ (Thuần Chủng)\nNét mộc Cao Nguyên\n\nĐặc điểm: Hạt Robusta sẻ nguyên bản, sơ chế ướt, không tẩm ướp tạp chất.\n\nHương vị: Thoảng hương bánh mì nướng, mạch nha và thảo mộc khô. Vị chua thanh lịch kết hợp đắng phức hợp, cân bằng như lụa.\n\nPhù hợp nhất với: Những người sành cà phê mộc, muốn tìm lại hương vị thuần khiết của di sản cao nguyên.\n\n\n\nTìm hiểu thêm\n\n\nRobusta Sẻ\n\n\nArabica Dark Roast S18\nArabica Dark Roast S18\nĐẳng cấp Cầu Đầt\n\nĐặc điểm: Hạt Arabica kích thước sàng 18 từ vùng Cầu Đất, rang đậm (Dark Roast).\n\nHương vị: Chocolate đen, chút khói nhẹ và vỏ cam. Đắng cacao rõ nét, giảm thiểu vị chua, hậu vị sạch sẽ. \n\nPhù hợp nhất với:  Làm nền tảng hoàn hảo cho các món Latte, Cappuccino hoặc Americano pha máy.\n\n\n\nTìm hiểu thêm\n\n\n\n\nSpecialty Núi Min\nHương hoa tinh tế\n\nĐặc điểm:Cà phê đặc sản cao cấp trồng ở độ cao 1550m - 1650m, rang vừa.\n\nHương vị: Nốt hương hoa nhài, hoa trắng và cam chanh thanh nhẹ. Vị chua sáng tinh tế, hậu vị mật ong kéo dài.\n\nPhù hợp nhất với: Những tín đồ yêu thích dòng specialty pha thủ công (Pour Over) hoặc trải nghiệm hương vị cà phê hiện đại.\n\n\n\nTìm hiểu thêm\n\n\nSpecialty Núi Min\n \nLựa chọn nào dành cho bạn?\n\n\tCho dù bạn trung thành với vị đắng mạnh của phin truyền thống hay muốn khám phá hương vị tinh tế của dòng specialty, CRACK BEANS đều có một gói cà phê dành riêng cho bạn. Tất cả các sản phẩm đều có sẵn hai định lượng 250g và 500g (tùy chọn Dạng Hạt hoặc Dạng Bột) để bạn dễ dàng sử dụng tại nhà hoặc quán.\n\n\n\n👉 Khám phá ngay bộ sưu tập tại trang Sản Phẩm của chúng tôi để chọn cho mình dòng hạt ưng ý nhất!\n\n\n\n\n \n \n \nBài đăng gần đây\nXem tất cả\nBí Quyết Pha Phin Ngon Chuẩn Vị Với 5 Bước Đơn Giản Cùng CRACK BEANS\n \n \n ",
+      "image": "/assets/blog-collection.webp"
+    }
+  ]
+}

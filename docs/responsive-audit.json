@@ -1,0 +1,164 @@
+[
+  {
+    "viewport": "desktop",
+    "page": "home",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "desktop",
+    "page": "shop",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "desktop",
+    "page": "about",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "desktop",
+    "page": "product",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "desktop",
+    "page": "blog",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "desktop",
+    "page": "contact",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 900,
+    "overflow": false,
+    "width": 1440
+  },
+  {
+    "viewport": "tablet",
+    "page": "home",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "tablet",
+    "page": "shop",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "tablet",
+    "page": "about",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "tablet",
+    "page": "product",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "tablet",
+    "page": "blog",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "tablet",
+    "page": "contact",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 1024,
+    "overflow": false,
+    "width": 768
+  },
+  {
+    "viewport": "mobile",
+    "page": "home",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "viewport": "mobile",
+    "page": "shop",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "viewport": "mobile",
+    "page": "about",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "viewport": "mobile",
+    "page": "product",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "viewport": "mobile",
+    "page": "blog",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  },
+  {
+    "viewport": "mobile",
+    "page": "contact",
+    "brokenVisibleImages": [],
+    "h1": 1,
+    "height": 844,
+    "overflow": false,
+    "width": 390
+  }
+]

@@ -1,0 +1,185 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Minus, Plus, ShoppingCart } from "lucide-react";
+import { type Product, useCart, money } from "./store";
+export function ProductCard({
+  product,
+  onQuick,
+}: {
+  product: Product;
+  onQuick: (p: Product) => void;
+}) {
+  const cart = useCart();
+  return (
+    <article className="product-card">
+      <div className="product-photo">
+        <Link to={`/san-pham/${product.id}`} aria-label={`Xem ${product.name}`}>
+          <img
+            src={product.images[0].src}
+            alt={product.images[0].alt}
+            width="700"
+            height="700"
+            loading="lazy"
+          />
+          <img className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
+        </Link>
+        <button className="quick-button" onClick={() => cart.add(product.id, "Hạt", 1)}>
+          Thêm vào giỏ <ShoppingCart size={16} aria-hidden="true" />
+        </button>
+      </div>
+      <div className="product-meta">
+        <span>{product.category} · 250 g</span>
+        <h3>
+          <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
+        </h3>
+        <p>{money(product.price)}</p>
+        <Link className="text-link" to={`/san-pham/${product.id}`}>
+          Xem sản phẩm <ArrowRight size={16} />
+        </Link>
+      </div>
+    </article>
+  );
+}
+export function Quantity({
+  value,
+  onChange,
+  label = "Số lượng",
+}: {
+  value: number;
+  onChange: (n: number) => void;
+  label?: string;
+}) {
+  return (
+    <div className="quantity" role="group" aria-label={label}>
+      <button
+        aria-label={`Giảm ${label.toLowerCase()}`}
+        disabled={value <= 1}
+        onClick={() => onChange(value - 1)}
+      >
+        <Minus size={16} />
+      </button>
+      <input
+        aria-label={label}
+        type="number"
+        min="1"
+        max="99"
+        value={value}
+        onChange={(e) => {
+          const v = Number(e.target.value);
+          onChange(
+            Number.isFinite(v) ? Math.max(1, Math.min(99, Math.round(v))) : 1,
+          );
+        }}
+      />
+      <button
+        aria-label={`Tăng ${label.toLowerCase()}`}
+        disabled={value >= 99}
+        onClick={() => onChange(value + 1)}
+      >
+        <Plus size={16} />
+      </button>
+    </div>
+  );
+}
+export function ProductDetail({
+  product,
+  onAdded,
+  compact = false,
+}: {
+  product: Product;
+  onAdded: () => void;
+  compact?: boolean;
+}) {
+  const [image, setImage] = useState(0),
+    [grind, setGrind] = useState<"Hạt" | "Bột">("Hạt"),
+    [quantity, setQuantity] = useState(1);
+  const cart = useCart();
+  return (
+    <div className={`product-detail ${compact ? "compact" : ""}`}>
+      <div className="gallery">
+        <img
+          className="main-product-image"
+          src={product.images[image].src}
+          alt={product.images[image].alt}
+          width="700"
+          height="700"
+        />
+        <div className="thumbnails">
+          {product.images.map((img, i) => (
+            <button
+              key={img.src}
+              aria-label={i === 0 ? "Xem bao bì" : "Xem hướng dẫn pha"}
+              aria-pressed={image === i}
+              onClick={() => setImage(i)}
+            >
+              <img src={img.src} alt="" width="64" height="64" />
+            </button>
+          ))}
+        </div>
+        <a
+          className="text-link"
+          href={product.images[image].src}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Mở ảnh đầy đủ <ArrowRight size={16} />
+        </a>
+      </div>
+      <div className="product-info">
+        <p className="eyebrow">{product.category} / Archive Hybrid Coffee</p>
+        {compact ? <h3>{product.name}</h3> : <h1>{product.name}</h1>}
+        <p className="price">
+          {money(product.price)} <span>/ 250 g</span>
+        </p>
+        <p>{product.description}</p>
+        <fieldset>
+          <legend>Định lượng</legend>
+          <div className="choice-row">
+            <span className="choice selected">250 g</span>
+            <span className="choice unavailable">500 g · liên hệ</span>
+          </div>
+          <small>
+            Giá gói 500 g đang được đối chiếu. Gọi{" "}
+            <a href="tel:0767509715">076 750 9715</a> để được tư vấn.
+          </small>
+        </fieldset>
+        <fieldset>
+          <legend>Phân loại</legend>
+          <div className="choice-row">
+            {(["Hạt", "Bột"] as const).map((g) => (
+              <label
+                className={`choice ${grind === g ? "selected" : ""}`}
+                key={g}
+              >
+                <input
+                  type="radio"
+                  name={`grind-${compact ? "quick" : "page"}`}
+                  value={g}
+                  checked={grind === g}
+                  onChange={() => setGrind(g)}
+                />
+                {g}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div className="purchase-row">
+          <Quantity value={quantity} onChange={setQuantity} />
+          <button
+            className="button"
+            onClick={() => {
+              cart.add(product.id, grind, quantity);
+              onAdded();
+            }}
+          >
+            Thêm vào giỏ hàng <Plus size={18} />
+          </button>
+        </div>
+        <p className="product-note">
+          Thông tin giao hàng và phí vận chuyển được xác nhận trước khi đặt
+          hàng.
+        </p>
+      </div>
+    </div>
+  );
+}

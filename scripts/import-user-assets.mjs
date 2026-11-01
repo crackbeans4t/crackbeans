@@ -1,0 +1,23 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import sharp from 'sharp';
+const root=new URL('../',import.meta.url),base='D:/Wix/assets';
+const data=JSON.parse(await fs.readFile(new URL('src/data.json',root),'utf8'));
+const manifest=[];
+async function asset(relative,name,width=1400){const source=path.join(base,relative),file=`/assets/${name}.webp`;const input=await fs.readFile(source),buffer=await sharp(input).rotate().resize({width,withoutEnlargement:true}).webp({quality:86}).toBuffer();await fs.writeFile(new URL('public'+file,root),buffer);manifest.push({source,file,originalBytes:input.length,optimizedBytes:buffer.length});return file;}
+const names=['robusta-clean-daklak','robusta-rang-bo','robusta-honey-99','robusta-se','arabica-dark-roast-s18','specialty-nui-min'];
+for(let i=0;i<names.length;i++)for(let j=0;j<2;j++)data.products[i].images[j].src=await asset(`product/${names[i]}-${j+1}.JPG`,`${names[i]}-${j+1}`);
+for(let i=0;i<3;i++)data.regions[i].image=await asset(`regions/${['dak-lak','cau-dat','nui-min'][i]}.png`,`region-${['dak-lak','cau-dat','nui-min'][i]}`);
+data.assets.regions=data.regions.map(r=>r.image);
+data.assets.hero=await asset('Web/image-4.png','coffee-ground-hero',1600);
+data.assets.seed=await asset('Web/6365a6d6fb1c478e2d1956d8fa979a7d.jpg','coffee-seedlings',1600);
+data.articles[0].image=await asset('blog/15ec879e35014c01512558aba222e8c9.jpg','blog-phin');
+data.articles[1].image=await asset('blog/DSC07438.JPG','blog-collection');
+data.articles[0].text=data.articles[0].text.replace(/\nThưởng thức\n/,'\nBước 5 — Thưởng thức\n');
+data.articles[0].steps=[];
+for(let i=0;i<5;i++)data.articles[0].steps.push(await asset(`blog/${i+3}.jpg`,`phin-step-${i+1}`,900));
+const honeyStart=data.articles[1].text.indexOf('Robusta Honey 99%'),honeyEnd=data.articles[1].text.indexOf('Robusta Sẻ (Thuần Chủng)');
+if(honeyStart>=0&&honeyEnd>honeyStart)data.articles[1].text=data.articles[1].text.slice(0,honeyStart)+'Robusta Honey 99%\n\nNgọt ngào hương mật ong\n\n'+data.products[2].description+'\n\n'+data.articles[1].text.slice(honeyEnd);
+await fs.writeFile(new URL('src/data.json',root),JSON.stringify(data,null,2));
+await fs.writeFile(new URL('source/user-assets-manifest.json',root),JSON.stringify(manifest,null,2));
+console.log(`${manifest.length} supplied assets imported; ${Math.round(manifest.reduce((s,x)=>s+x.optimizedBytes,0)/1024)} KB optimized.`);
