@@ -20,19 +20,19 @@ export default function Checkout() {
   if(receipt) return <section className="container checkout-result page-space"><p className="eyebrow">Đã nhận yêu cầu COD</p><h1>Cảm ơn bạn đã chọn Crack Beans.</h1><p>Mã yêu cầu <strong>{receipt.slice(0,8).toUpperCase()}</strong>. Cửa hàng sẽ liên hệ xác nhận sản phẩm, phí vận chuyển và lịch giao. Bạn thanh toán tiền mặt khi nhận hàng.</p><Link className="button" to="/san-pham">Tiếp tục khám phá</Link></section>;
   return <section className="container checkout page-space">
     <nav className="breadcrumbs" aria-label="Tiến trình đặt hàng"><Link to="/san-pham">Sản phẩm</Link><span>/</span><span>Thông tin giao hàng</span></nav>
-    <p className="eyebrow">Crack Beans · Đặt hàng</p><h1>Một chút cà phê,<br/>gửi đến bạn.</h1>
+    <h1>Một chút cà phê,<br/>gửi đến bạn.</h1>
     {!cart.count ? <div className="empty-state"><h2>Giỏ hàng đang trống</h2><p>Chọn hương vị bạn yêu thích trước khi đặt hàng.</p><Link className="button" to="/san-pham">Khám phá cà phê</Link></div> : <div className="checkout-layout">
       <form className="checkout-form" onSubmit={submit}>
-        <h2>Thông tin người nhận</h2><p className="muted">Điền thông tin để cửa hàng liên hệ và xác nhận giao hàng.</p>
-        <div className="form-two"><label>Họ và tên<input name="name" autoComplete="name" required minLength={2} maxLength={100} placeholder="Nguyễn Minh Anh"/></label><label>Số điện thoại<input name="phone" type="tel" autoComplete="tel" required pattern="(?:\+84|0)[0-9\s.\-]{9,14}" placeholder="09xx xxx xxx"/></label></div>
-        <label>Địa chỉ nhận hàng<textarea name="address" autoComplete="street-address" required minLength={15} maxLength={400} rows={3} placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố"/></label>
-        <label>Ghi chú <span className="muted">(không bắt buộc)</span><textarea name="note" maxLength={1000} rows={2} placeholder="Khung giờ thuận tiện nhận cuộc gọi…"/></label>
-        <section className="payment-method"><span className="eyebrow">Phương thức thanh toán</span><h3>Tiền mặt khi nhận hàng</h3><p>Thanh toán sau khi nhận sản phẩm. Cửa hàng sẽ xác nhận phí vận chuyển trước khi gửi.</p></section>
-        <label className="consent"><input type="checkbox" name="consent" required/><span>Tôi đồng ý để Crack Beans sử dụng thông tin trên nhằm liên hệ, xử lý yêu cầu đặt hàng. <Link to="/chinh-sach/bao-mat">Chính sách bảo mật</Link>.</span></label>
+        <h2>Thông tin người nhận</h2>
+        <div className="form-two"><label>Họ và tên <span className="req" aria-hidden="true">*</span><input name="name" autoComplete="name" required minLength={2} maxLength={100} placeholder="Nguyễn Minh Anh"/></label><label>Số điện thoại <span className="req" aria-hidden="true">*</span><input name="phone" type="tel" autoComplete="tel" required pattern="(?:\+84|0)[0-9\s.\-]{9,14}" placeholder="09xx xxx xxx"/></label></div>
+        <label>Địa chỉ nhận hàng <span className="req" aria-hidden="true">*</span><textarea name="address" autoComplete="street-address" required minLength={15} maxLength={400} rows={3} placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố"/></label>
+        <label>Ghi chú<textarea name="note" maxLength={1000} rows={2} placeholder="Khung giờ thuận tiện nhận cuộc gọi…"/></label>
+        <section className="payment-method"><span className="eyebrow">Thanh toán</span><h3>Tiền mặt khi nhận hàng</h3></section>
+        <label className="consent"><input type="checkbox" name="consent" required/><span>Tôi đồng ý với <Link to="/chinh-sach/bao-mat">chính sách bảo mật</Link> <span className="req" aria-hidden="true">*</span></span></label>
         {error && <p role="alert" className="form-error">{error}</p>}
         <button className="button full" disabled={busy}>{busy?'Đang gửi yêu cầu…':'Gửi yêu cầu đặt hàng COD'}</button><small className="muted">Cần hỗ trợ? Gọi <a href="tel:0767509715">076 750 9715</a>.</small>
       </form>
-      <aside className="checkout-summary"><p className="eyebrow">Gu cà phê của bạn</p><h2>Sản phẩm đã chọn <span>({cart.count})</span></h2>
+      <aside className="checkout-summary"><h2>Sản phẩm đã chọn <span>({cart.count})</span></h2>
         {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind+line.size}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>{line.size === "500g" ? "500 g" : "250 g"} · {line.grind} · {line.quantity} gói</small><strong>{money(p.price*(line.size === "500g" ? 2 : 1)*line.quantity)}</strong></div></div>})}
         <div className="summary-totals"><div><span>Phí vận chuyển</span><span>Báo khi gọi xác nhận</span></div><div className="summary-subtotal"><span>Tạm tính</span><strong>{money(cart.total)}</strong></div></div>
         <Link className="text-link" to="/san-pham">Chọn thêm cà phê</Link>

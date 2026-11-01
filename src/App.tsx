@@ -9,7 +9,6 @@ import {
   useParams,
 } from "react-router-dom";
 import {
-  ArrowRight,
   ChevronDown,
   Menu,
   ShoppingBag,
@@ -17,6 +16,7 @@ import {
   Phone,
   Mail,
   MapPin,
+  Clock,
 } from "lucide-react";
 import { CartProvider, useCart, money, type Product } from "./store";
 import Overlay from "./Overlay";
@@ -56,11 +56,35 @@ function Header({ onCart }: { onCart: () => void }) {
             />
           </Link>
           <nav className="desktop-nav" aria-label="Điều hướng chính">
-            {navigation.map(([to, label]) => (
-              <NavLink key={to} to={to} end={to === "/"}>
-                {label}
-              </NavLink>
-            ))}
+            {navigation.map(([to, label]) =>
+              to === "/san-pham" ? (
+                <div className="nav-dropdown" key={to}>
+                  <NavLink to={to} aria-haspopup="true">
+                    {label} <ChevronDown size={14} aria-hidden="true" />
+                  </NavLink>
+                  <div className="nav-panel">
+                    {["Robusta", "Arabica"].map((c) => (
+                      <div key={c}>
+                        <Link className="nav-panel-head" to={`/san-pham?loai=${c}`}>
+                          {c}
+                        </Link>
+                        {data.products
+                          .filter((p) => p.category === c)
+                          .map((p) => (
+                            <Link key={p.id} to={`/san-pham/${p.id}`}>
+                              {p.name}
+                            </Link>
+                          ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <NavLink key={to} to={to} end={to === "/"}>
+                  {label}
+                </NavLink>
+              ),
+            )}
           </nav>
           <div className="header-actions">
             <button
@@ -108,14 +132,41 @@ function Header({ onCart }: { onCart: () => void }) {
               ),
             )}
           </nav>
-          <div className="menu-contact">
-            <p className="eyebrow">Cà phê Việt. Hương vị nguyên bản.</p>
-            <a href="tel:0767509715">076 750 9715</a>
-            <a href="mailto:crackbeans.4t@gmail.com">crackbeans.4t@gmail.com</a>
-          </div>
+          <Socials />
         </div>
       </Overlay>
     </>
+  );
+}
+const socials = [
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/crackbeans.4t/",
+    icon: <><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r=".9" fill="currentColor" stroke="none" /></>,
+  },
+  {
+    label: "Facebook",
+    href: "https://www.facebook.com/profile.php?id=61595407495990",
+    icon: <path d="M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v7h4v-7h3l1-4h-4V8.5a.5.5 0 0 1 .5-.5Z" />,
+  },
+  {
+    label: "TikTok",
+    // Wix chỉ có link tiktok.com chung; thay bằng link tài khoản Crack Beans khi có.
+    href: "https://www.tiktok.com/",
+    icon: <path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.4 2.6 2.2 4.4 5 4.6" />,
+  },
+];
+function Socials() {
+  return (
+    <div className="socials">
+      {socials.map((s) => (
+        <a key={s.label} href={s.href} target="_blank" rel="noreferrer" aria-label={`Crack Beans trên ${s.label}`} title={s.label}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" aria-hidden="true">
+            {s.icon}
+          </svg>
+        </a>
+      ))}
+    </div>
   );
 }
 function Footer() {
@@ -136,32 +187,14 @@ function Footer() {
             Archive Hybrid Coffee — rang mộc, pha chậm, giữ trọn hương vị nguyên
             bản.
           </p>
-          <a
-            className="text-link"
-            href="https://www.instagram.com/crackbeans.4t/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg> Instagram
-          </a>
-        </div>
-        <div>
-          <h2>Liên kết nhanh</h2>
-          <nav aria-label="Liên kết nhanh">
-            {navigation.map(([to, label]) => (
-              <Link key={to} to={to}>
-                {label}
-              </Link>
-            ))}
-          </nav>
         </div>
         <div>
           <h2>Chính sách</h2>
           <nav aria-label="Chính sách">
             {[
-              ["giao-hang", "Chính sách giao hàng"],
+              ["giao-hang", "Giao hàng"],
               ["doi-tra", "Đổi trả & hoàn tiền"],
-              ["bao-mat", "Chính sách bảo mật"],
+              ["bao-mat", "Bảo mật"],
               ["dieu-khoan", "Điều khoản sử dụng"],
             ].map(([slug, title]) => (
               <Link key={slug} to={`/chinh-sach/${slug}`}>
@@ -172,15 +205,17 @@ function Footer() {
         </div>
         <div className="footer-contact">
           <h2>Liên hệ</h2>
-          <p>109/3 Nguyễn Ảnh Thủ, Hóc Môn, TP. Hồ Chí Minh</p>
-          <a href="tel:0767509715">076 750 9715</a>
-          <a href="mailto:crackbeans.4t@gmail.com">crackbeans.4t@gmail.com</a>
-          <p>7:00 – 22:00 mỗi ngày</p>
+          <ul>
+            <li><MapPin size={16} aria-hidden="true" /><span>109/3 Nguyễn Ảnh Thủ, Hóc Môn, TP. Hồ Chí Minh</span></li>
+            <li><Phone size={16} aria-hidden="true" /><a href="tel:0767509715">076 750 9715</a></li>
+            <li><Mail size={16} aria-hidden="true" /><a href="mailto:crackbeans.4t@gmail.com">crackbeans.4t@gmail.com</a></li>
+            <li><Clock size={16} aria-hidden="true" /><span>7:00 – 22:00 mỗi ngày</span></li>
+          </ul>
         </div>
       </div>
       <div className="copyright container">
         <span>© 2026 CRACK BEANS</span>
-        <span>Archive Hybrid Coffee</span>
+        <Socials />
       </div>
     </footer>
   );
@@ -198,7 +233,7 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
             <h3>Giỏ hàng đang trống</h3>
             <p>Chọn một hương vị cà phê dành cho bạn.</p>
             <Link className="button" to="/san-pham" onClick={onClose}>
-              Khám phá sản phẩm <ArrowRight size={18} />
+              Khám phá sản phẩm
             </Link>
           </div>
         ) : (
@@ -252,7 +287,7 @@ function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
               navigate("/thanh-toan");
             }}
           >
-            Tiếp tục thanh toán <ArrowRight size={18} />
+            Tiếp tục thanh toán
           </button>
           <button className="text-button full" onClick={onClose}>
             Tiếp tục mua sắm

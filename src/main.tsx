@@ -9,6 +9,8 @@ import "@fontsource/public-sans/vietnamese-400.css";
 import "@fontsource/public-sans/vietnamese-600.css";
 import "@fontsource/public-sans/latin-400.css";
 import "@fontsource/public-sans/latin-600.css";
+import "@fontsource/lora/vietnamese-400-italic.css";
+import "@fontsource/lora/latin-400-italic.css";
 import App from "./App";
 import "./styles.css";
 const app = (

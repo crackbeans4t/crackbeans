@@ -1,7 +1,7 @@
 import Image from "./Image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { ArrowRight, Mail, Phone, MapPin } from "lucide-react";
+import { ArrowUpDown, Check, ChevronDown, Mail, Phone, MapPin } from "lucide-react";
 import data from "./data.json";
 import { useContent } from './content';
 import { type Product } from "./store";
@@ -30,7 +30,7 @@ export function Home({ onQuick }: QuickProps) {
             tư duy thiết kế tối giản, hiện đại trong từng mẻ hạt.
           </p>
           <Link className="button button-cream" to="/san-pham">
-            Khám phá sản phẩm <ArrowRight size={18} />
+            Khám phá sản phẩm
           </Link>
         </div>
       </section>
@@ -43,21 +43,21 @@ export function Home({ onQuick }: QuickProps) {
           phê, giúp bạn chọn sản phẩm phù hợp với gu thưởng thức.
         </p>
         <Link className="text-link" to="/ve-chung-toi">
-          Câu chuyện Crack Beans <ArrowRight size={18} />
+          Câu chuyện Crack Beans
         </Link>
       </section>
       <section className="container section-space featured">
         <div className="section-head">
           <div>
             <p className="eyebrow">Sản phẩm nổi bật</p>
-            <h2>Arabica</h2>
+            <h2>Chọn gu cà phê của bạn</h2>
           </div>
           <Link className="text-link" to="/san-pham">
-            Tất cả sản phẩm <ArrowRight size={18} />
+            Tất cả sản phẩm
           </Link>
         </div>
-        <div className="featured-grid">
-          {data.products.filter(p=>p.category==='Arabica').slice(0,2).map((p) => (
+        <div className="featured-rail" tabIndex={0} aria-label="Sản phẩm nổi bật, cuộn ngang để xem thêm">
+          {[...data.products].sort((a, b) => Number(b.category === "Arabica") - Number(a.category === "Arabica")).map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
           ))}
         </div>
@@ -136,7 +136,7 @@ export function About() {
             dấu ấn tối giản — chân thật, mạnh mẽ và rõ ràng.
           </p>
           <Link className="button" to="/san-pham">
-            Khám phá sản phẩm <ArrowRight size={18} />
+            Khám phá sản phẩm
           </Link>
         </div>
         <Image
@@ -174,6 +174,64 @@ export function About() {
         </blockquote>
       </section>
     </>
+  );
+}
+const sortOptions = [
+  ["featured", "Đề xuất"],
+  ["asc", "Giá tăng dần"],
+  ["desc", "Giá giảm dần"],
+] as const;
+function SortMenu({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, [open]);
+  const current = sortOptions.find(([v]) => v === value)?.[1];
+  return (
+    <div
+      className="sort-menu"
+      ref={ref}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setOpen(false);
+      }}
+    >
+      <button
+        className="sort-trigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Sắp xếp: ${current}`}
+        onClick={() => setOpen(!open)}
+      >
+        <ArrowUpDown size={16} aria-hidden="true" />
+        {current}
+        <ChevronDown size={16} aria-hidden="true" />
+      </button>
+      {open && (
+        <ul role="listbox" aria-label="Sắp xếp sản phẩm">
+          {sortOptions.map(([v, label]) => (
+            <li key={v}>
+              <button
+                role="option"
+                aria-selected={v === value}
+                onClick={() => {
+                  onChange(v);
+                  setOpen(false);
+                }}
+              >
+                {label}
+                {v === value && <Check size={16} aria-hidden="true" />}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 export function Shop({ onQuick }: QuickProps) {
@@ -227,16 +285,11 @@ export function Shop({ onQuick }: QuickProps) {
               </button>
             ))}
           </div>
-          <label className="sort-label">
-            Sắp xếp{" "}
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              <option value="featured">Đề xuất</option>
-              <option value="asc">Giá tăng dần</option>
-              <option value="desc">Giá giảm dần</option>
-            </select>
-          </label>
         </div>
-        <p className="muted result-count">{products.length} sản phẩm</p>
+        <div className="result-row">
+          <p className="muted">{products.length} sản phẩm</p>
+          <SortMenu value={sort} onChange={setSort} />
+        </div>
         <div className="product-grid">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
@@ -277,7 +330,7 @@ export function Blog() {
               <Link to={`/blog/${p.id}`}>{p.title}</Link>
             </h2>
             <Link className="text-link" to={`/blog/${p.id}`}>
-              Đọc bài viết <ArrowRight size={18} />
+              Đọc bài viết
             </Link>
           </article>
         ))}
@@ -377,7 +430,7 @@ export function Post() {
         return <Paragraph key={i} text={b.text} lead={i === 0} />;
       })}
       <Link className="button" to="/san-pham">
-        Khám phá sản phẩm <ArrowRight size={18} />
+        Khám phá sản phẩm
       </Link>
     </article>
   );
