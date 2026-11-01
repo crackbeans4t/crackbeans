@@ -5,3 +5,4 @@
 .admin-login{max-width:520px;width:calc(100% - 40px)}
 .admin-login form,.admin-login input,.admin-login .button{width:100%}
 .admin-login .button{min-height:52px}
+.admin-login{grid-template-columns:minmax(0,1fr)}
