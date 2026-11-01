@@ -46,16 +46,15 @@ const statuses: Record<string, string> = {
   cancelled: "Đã hủy",
 };
 const answerLabels: Record<string, string> = {
-  phin: "Phin",
-  may: "Máy espresso",
-  pour: "Pour over",
-  tien: "Chưa rõ cách pha",
-  dam: "Đậm, đắng",
-  beo: "Béo thơm",
-  "can-bang": "Cân bằng",
-  "chua-thanh": "Chua thanh",
-  den: "Uống đen",
-  sua: "Uống với sữa",
+  phin: "Phin (Medium Fine)",
+  may: "Máy / Staresso (Fine)",
+  dam: "Đắng đậm",
+  beo: "Béo ngậy",
+  ngot: "Ngọt hậu",
+  thom: "Thơm thanh",
+  sang: "1–2 ly mỗi sáng",
+  "ca-ngay": "Nhâm nhi cả ngày",
+  "thinh-thoang": "Thi thoảng / cuối tuần",
 };
 const tabs: { id: Tab; label: string; hint: string; icon: ReactNode }[] = [
   { id: "overview", label: "Tổng quan", hint: "Tình hình cửa hàng", icon: <LayoutDashboard size={18} /> },
@@ -451,7 +450,7 @@ export default function Admin() {
       }
       return [...m.entries()].sort((a, b) => b[1] - a[1]);
     };
-    return { brew: count("brew"), taste: count("taste"), milk: count("milk"), result: count("result") };
+    return { brew: count("brew"), taste: count("taste"), freq: count("freq"), result: count("result") };
   }, [surveys]);
   const productName = (id: string) => data.products.find((p) => p.id === id)?.name ?? id;
   const current = tabs.find((t) => t.id === tab)!;
@@ -742,16 +741,16 @@ export default function Admin() {
               </section>
               <section className="admin-panel">
                 <div className="admin-panel-head">
-                  <h2>Khảo sát nhu cầu</h2>
+                  <h2>Grind Match — khảo sát nhu cầu</h2>
                   <span className="admin-muted">{surveys.length} lượt trả lời</span>
                 </div>
                 {surveys.length ? (
                   <div className="admin-survey">
                     {(
                       [
-                        ["Cách pha", surveyStats.brew],
-                        ["Gu vị", surveyStats.taste],
-                        ["Cách uống", surveyStats.milk],
+                        ["Dụng cụ pha", surveyStats.brew],
+                        ["Hương vị", surveyStats.taste],
+                        ["Tần suất", surveyStats.freq],
                         ["Sản phẩm được gợi ý", surveyStats.result],
                       ] as [string, [string, number][]][]
                     ).map(([title, rows]) => (

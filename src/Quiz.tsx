@@ -1,74 +1,82 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Coffee, ShoppingCart, Cookie, Droplets, Filter, Flame, Flower2, Gauge, Milk, Scale, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import Overlay from "./Overlay";
 import Image from "./Image";
 import { useContent } from "./content";
-import { money, useCart } from "./store";
+import { money } from "./store";
 import { minPrice, variantsOf } from "./catalog";
+import { grindFor, matchProduct, profiles, type QuizAnswers } from "./quizLogic";
 
-type Answers = { brew: string; taste: string; milk: string };
-const SEEN = "cb-quiz-seen-v1";
+const SEEN = "cb-quiz-seen-v2";
 export const OPEN_QUIZ = "cb:open-quiz";
 
-const questions: { key: keyof Answers; title: string; options: [string, string, string, ReactNode][] }[] = [
+type Option = { value: string; label: string; hint: string; tag?: string; img?: string };
+const questions: { key: keyof QuizAnswers; title: string; sub: string; options: Option[] }[] = [
   {
     key: "brew",
-    title: "Bạn thường pha cà phê bằng gì?",
+    title: "Dụng cụ pha chế chính của bạn là gì?",
+    sub: "Độ mịn bột xay sẽ được CRACK BEANS điều chỉnh chính xác theo dụng cụ pha của bạn.",
     options: [
-      ["phin", "Phin", "Pha phin truyền thống", <Filter />],
-      ["may", "Máy espresso", "Espresso, latte, cappuccino", <Gauge />],
-      ["pour", "Pour over", "Rót tay, V60, Chemex", <Droplets />],
-      ["tien", "Chưa rõ", "Mình muốn được gợi ý", <Sparkles />],
+      { value: "phin", img: "/assets/quiz-brew-phin.webp", label: "Phin truyền thống", tag: "Medium Fine", hint: "Giúp thẩm thấu đều, không nghẹt phin" },
+      { value: "may", img: "/assets/quiz-brew-may.webp", label: "Pha máy / Staresso", tag: "Fine", hint: "Chiết xuất dưới áp suất, tạo crema dày" },
     ],
   },
   {
     key: "taste",
-    title: "Gu vị bạn thích nhất?",
+    title: "Hương vị đặc trưng bạn ưa chuộng nhất?",
+    sub: "Lựa chọn tầng hương vị khiến bạn hào hứng và thấy dễ chịu nhất.",
     options: [
-      ["dam", "Đậm, đắng mạnh", "Cacao, chocolate đen", <Flame />],
-      ["beo", "Béo thơm", "Thơm bơ, hậu caramel", <Cookie />],
-      ["can-bang", "Cân bằng", "Mượt, ngọt hậu, dễ uống", <Scale />],
-      ["chua-thanh", "Chua thanh", "Hương hoa, cam chanh", <Flower2 />],
+      { value: "dam", img: "/assets/quiz-taste-dam.webp", label: "Đắng đậm & Đằm thắm", hint: "Thân vị dày, vị đắng di sản, tỉnh táo mạnh mẽ" },
+      { value: "beo", img: "/assets/quiz-taste-beo.webp", label: "Béo ngậy & Đượm vị", hint: "Vị đằm béo ký ức, hòa quyện khi uống cùng sữa" },
+      { value: "ngot", img: "/assets/quiz-taste-ngot.webp", label: "Ngọt hậu tự nhiên", hint: "Vị đắng dịu nhẹ, ngọt sâu nhờ hạt chín mộc" },
+      { value: "thom", img: "/assets/quiz-taste-thom.webp", label: "Thơm thanh & Dịu nhẹ", hint: "Nồng nàn hương hoa quả, chua thanh dịu, hậu vị ngọt" },
     ],
   },
   {
-    key: "milk",
-    title: "Bạn uống cà phê thế nào?",
+    key: "freq",
+    title: "Tần suất thưởng thức hằng ngày của bạn?",
+    sub: "Gợi ý dòng hạt có hàm lượng caffeine vừa vặn nhất với cơ thể bạn.",
     options: [
-      ["den", "Uống đen", "Nóng hoặc đá", <Coffee />],
-      ["sua", "Với sữa", "Sữa đá, latte, bạc xỉu", <Milk />],
+      { value: "sang", label: "1 – 2 ly mỗi sáng", tag: "Bứt phá năng lượng", hint: "Cần cú hích tỉnh táo mạnh để giải quyết công việc" },
+      { value: "ca-ngay", label: "Nhâm nhi cả ngày", tag: "Êm dịu, không sợ say", hint: "Cần dòng hạt mộc êm dịu, nhâm nhi thoải mái, không lo nôn nao" },
+      { value: "thinh-thoang", label: "Thi thoảng / Cuối tuần", tag: "Trải nghiệm", hint: "Uống để chill, khám phá dải hương phong phú" },
     ],
   },
 ];
+const letters = "ABCD";
 
-// Điểm dựa trên mô tả hương vị và cách pha gợi ý của từng sản phẩm.
-const weights: Record<string, Partial<Record<string, number>>> = {
-  "robusta-clean-daklak": { phin: 3, may: 2, dam: 3, den: 2, tien: 1 },
-  "robusta-clean-rang-bo": { phin: 3, beo: 3, sua: 3, tien: 1 },
-  "robusta-honey-99": { phin: 2, "can-bang": 3, den: 1, sua: 1, tien: 1 },
-  "robusta-se": { phin: 2, "can-bang": 2, den: 2 },
-  "arabica-dark-roast-s18": { may: 3, dam: 1, "can-bang": 1, sua: 2 },
-  "specialty-nui-min": { pour: 3, "chua-thanh": 3, den: 2 },
-};
+function Meter({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="gm-meter">
+      <span>{label}</span>
+      <span className="gm-dots" role="img" aria-label={`${value} trên 5`}>
+        {[1, 2, 3, 4, 5].map((n) => (
+          <i key={n} className={n <= value ? "on" : ""} />
+        ))}
+      </span>
+    </div>
+  );
+}
 
 export default function Quiz() {
   const { data } = useContent();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
+  const [screen, setScreen] = useState<"welcome" | "steps" | "result">("welcome");
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Partial<Answers>>({});
-  const [picked, setPicked] = useState("");
-  const [picks, setPicks] = useState<string[] | null>(null);
-  const cart = useCart();
+  const [answers, setAnswers] = useState<Partial<QuizAnswers>>({});
+  const [name, setName] = useState("");
 
+  function reset() {
+    setScreen("welcome");
+    setStep(0);
+    setAnswers({});
+  }
   useEffect(() => {
     const show = () => {
-      setStep(0);
-      setAnswers({});
-      setPicked("");
-      setPicks(null);
+      reset();
       setOpen(true);
     };
     window.addEventListener(OPEN_QUIZ, show);
@@ -94,124 +102,66 @@ export default function Quiz() {
       /* ignore */
     }
   }
-
-  function finish(next: Answers) {
-    const values = Object.values(next);
-    const ranked = data.products
-      .map((p, i) => ({ id: p.id, score: values.reduce((n, a) => n + (weights[p.id]?.[a] ?? 0), 0), i }))
-      .sort((a, b) => b.score - a.score || a.i - b.i);
-    const result = ranked[0]?.id;
-    if (!result) return close();
+  function choose(value: string) {
+    const q = questions[step];
+    setAnswers((old) => ({ ...old, [q.key]: value }));
+    // Câu 1, 2 tự sang câu sau; câu 3 chờ khách bấm "Nhận kết quả".
+    if (step < questions.length - 1) setTimeout(() => setStep((s) => s + 1), 220);
+  }
+  function submit() {
+    const full = answers as QuizAnswers;
+    const result = matchProduct(full);
+    // Chỉ gửi câu trả lời và kết quả; tên khách không rời khỏi trình duyệt.
     void fetch("/api/survey", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers: next, result }),
+      body: JSON.stringify({ answers: full, result }),
     }).catch(() => undefined);
-    setPicks(ranked.slice(0, 2).map((r) => r.id));
-  }
-  // Mở trang sản phẩm chỉ khi khách chủ động bấm xem.
-  function view(id: string) {
-    close();
-    navigate(`/san-pham/${id}?goi-y=1`);
-  }
-
-  function choose(key: keyof Answers, value: string) {
-    if (picked) return;
-    const next = { ...answers, [key]: value };
-    setAnswers(next);
-    setPicked(value);
-    // Giữ trạng thái đã chọn một nhịp ngắn để khách thấy lựa chọn của mình.
-    setTimeout(() => {
-      setPicked("");
-      if (step < questions.length - 1) setStep(step + 1);
-      else finish(next as Answers);
-    }, 260);
+    setScreen("result");
   }
 
   const q = questions[step];
-  const label = (key: keyof Answers) => questions.find((x) => x.key === key)?.options.find((o) => o[0] === answers[key])?.[1];
-  const best = picks && data.products.find((p) => p.id === picks[0]);
-  const alt = picks && data.products.find((p) => p.id === picks[1]);
-  return (
-    <Overlay open={open} onClose={close} title="Tìm cà phê hợp gu" wide className="quiz-dialog">
-      <div className="quiz">
-        <aside className="quiz-visual">
-          <Image src="/assets/blog-phin.webp" alt="" sizes="(min-width: 768px) 360px, 100vw" width="720" height="900" />
-          <div>
-            <p className="eyebrow">Crack Beans gợi ý</p>
-            <p className="quiz-visual-title">Tìm cà phê hợp gu của bạn</p>
-            <p>3 câu hỏi · khoảng 20 giây</p>
-          </div>
-        </aside>
+  const ready = !!(answers.brew && answers.taste && answers.freq);
+  const resultId = ready ? matchProduct(answers as QuizAnswers) : "";
+  const product = data.products.find((p) => p.id === resultId);
+  const profile = profiles[resultId];
+  const grind = answers.brew ? grindFor(answers.brew) : undefined;
 
-        {best ? (
-          <section className="quiz-body quiz-result" aria-live="polite">
-            <p className="eyebrow">Gợi ý dành cho bạn</p>
-            <article className="quiz-pick">
-              <Image src={best.images[0].src} alt={best.images[0].alt} sizes="160px" width="320" height="320" />
-              <div>
-                <span className="quiz-pick-tag">{best.category}</span>
-                <h3>{best.name}</h3>
-                <p className="quiz-pick-price">
-                  {variantsOf(best).length > 1 && "Từ "}
-                  {money(minPrice(best))}
-                </p>
-                <p className="quiz-pick-desc">{best.description}</p>
-              </div>
-            </article>
-            <ul className="quiz-reasons" aria-label="Vì sao hợp với bạn">
-              {(["brew", "taste", "milk"] as const).map((k) => label(k) && <li key={k}>{label(k)}</li>)}
-            </ul>
-            <div className="quiz-actions">
-              <button className="button" onClick={() => view(best.id)}>
-                Xem sản phẩm
-              </button>
-              <button
-                className="button button-outline"
-                onClick={() => {
-                  cart.add(best.id, undefined, 1);
-                  close();
-                }}
-              >
-                <ShoppingCart size={18} aria-hidden="true" /> Thêm vào giỏ
-              </button>
-            </div>
-            {alt && (
-              <button className="quiz-alt" onClick={() => view(alt.id)}>
-                <Image src={alt.images[0].src} alt="" sizes="48px" width="96" height="96" />
-                <span>
-                  <small>Hoặc thử</small>
-                  <strong>{alt.name}</strong>
-                </span>
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
-            )}
-            <div className="quiz-result-foot">
-              <button
-                className="quiz-skip"
-                onClick={() => {
-                  setPicks(null);
-                  setAnswers({});
-                  setStep(0);
-                }}
-              >
-                Làm lại
-              </button>
-              <button className="quiz-skip" onClick={close}>
-                Để sau
-              </button>
-            </div>
-          </section>
-        ) : (
-        <section className="quiz-body" aria-live="polite">
+  return (
+    <Overlay open={open} onClose={close} title="Grind Match — Bạn thuộc gu cà phê nào?" wide className="quiz-dialog">
+      {screen === "welcome" && (
+        <div className="gm-welcome">
+          <div className="gm-split">
+            <Image className="gm-bean" src="/assets/quiz-cover.webp" alt="Hạt cà phê chia đôi: nửa Robusta rang đậm, nửa Arabica" sizes="(min-width: 768px) 520px, 100vw" width="820" height="560" fetchPriority="high" />
+            <p className="gm-side left">
+              <strong>Robusta</strong>
+              <span>Đắng đậm</span>
+            </p>
+            <p className="gm-side right">
+              <strong>Arabica</strong>
+              <span>Thơm thanh</span>
+            </p>
+          </div>
+          <div className="gm-welcome-text">
+            <p className="eyebrow">Grind Match</p>
+            <h3>Bạn thuộc gu cà phê nào?</h3>
+            <p>Chỉ 30 giây để CRACK BEANS dán tem Custom Grind cá nhân hóa đúng gu cho bạn.</p>
+            <button className="button" onClick={() => setScreen("steps")}>
+              Bắt đầu khám phá (Get started) <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <button className="quiz-skip" onClick={close}>
+              Để sau
+            </button>
+          </div>
+        </div>
+      )}
+
+      {screen === "steps" && (
+        <section className="gm-steps" aria-live="polite">
           <div className="quiz-top">
-            {step > 0 ? (
-              <button className="quiz-back" onClick={() => setStep(step - 1)} aria-label="Quay lại câu trước">
-                <ArrowLeft size={18} aria-hidden="true" />
-              </button>
-            ) : (
-              <span />
-            )}
+            <button className="quiz-back" onClick={() => (step ? setStep(step - 1) : setScreen("welcome"))} aria-label="Quay lại">
+              <ArrowLeft size={18} aria-hidden="true" />
+            </button>
             <ol className="quiz-steps" aria-label={`Câu ${step + 1} trên ${questions.length}`}>
               {questions.map((item, i) => (
                 <li key={item.key} className={i < step ? "done" : i === step ? "current" : ""} />
@@ -221,33 +171,90 @@ export default function Quiz() {
               {step + 1}/{questions.length}
             </span>
           </div>
-
           <div className="quiz-question" key={step}>
-            <h3>{q.title}</h3>
-            <div className={`quiz-options${q.options.length === 2 ? " two" : ""}`}>
-              {q.options.map(([value, label, hint, icon]) => (
-                <button
-                  key={value}
-                  aria-pressed={answers[q.key] === value}
-                  className={picked === value ? "picked" : ""}
-                  onClick={() => choose(q.key, value)}
-                >
-                  <span className="quiz-icon" aria-hidden="true">
-                    {icon}
+            <div>
+              <h3>
+                Câu {step + 1}: {q.title}
+              </h3>
+              <p className="gm-sub">{q.sub}</p>
+            </div>
+            <div className={`gm-options n${q.options.length}`}>
+              {q.options.map((o, i) => (
+                <button key={o.value} className={o.img ? "has-img" : ""} aria-pressed={answers[q.key] === o.value} onClick={() => choose(o.value)}>
+                  {o.img && (
+                    <span className={`gm-option-img ${q.key}`}>
+                      <Image src={o.img} alt="" sizes="(min-width: 768px) 220px, 45vw" width="440" height="330" />
+                    </span>
+                  )}
+                  <span className="gm-letter" aria-hidden="true">
+                    {letters[i]}
                   </span>
-                  <strong>{label}</strong>
-                  <small>{hint}</small>
+                  <span className="gm-option-text">
+                    <strong>{o.label}</strong>
+                    {o.tag && <em>{o.tag}</em>}
+                    <small>{o.hint}</small>
+                  </span>
                 </button>
               ))}
             </div>
+            {step === questions.length - 1 && (
+              <div className="gm-final">
+                <label className="gm-name">
+                  <span>Tên in trên tem (không bắt buộc)</span>
+                  <input value={name} maxLength={24} placeholder="Ví dụ: Minh Anh" autoComplete="given-name" onChange={(e) => setName(e.target.value)} />
+                </label>
+                <button className="button" disabled={!ready} onClick={submit}>
+                  Nhận kết quả gợi ý <ArrowRight size={18} aria-hidden="true" />
+                </button>
+              </div>
+            )}
           </div>
-
-          <button className="quiz-skip" onClick={close}>
-            Để sau
-          </button>
         </section>
-        )}
-      </div>
+      )}
+
+      {screen === "result" && product && profile && grind && (
+        <section className="gm-result" aria-live="polite">
+          <div className="gm-pack">
+            <Image src={product.images[0].src} alt={product.images[0].alt} sizes="(min-width: 768px) 400px, 100vw" width="700" height="700" />
+            <div className="gm-label">
+              <span>Custom Grind</span>
+              <strong>{grind.name}</strong>
+              <small>{grind.use}</small>
+              <hr />
+              <small>Packed for:</small>
+              <b>{name.trim() || "Bạn"}</b>
+            </div>
+          </div>
+          <div className="gm-result-info">
+            <p className="eyebrow">Gu của bạn là</p>
+            <h3>{product.name}</h3>
+            <p className="gm-tagline">{profile.tagline}</p>
+            <p className="gm-price">
+              {variantsOf(product).length > 1 && "Từ "}
+              {money(minPrice(product))}
+            </p>
+            <div className="gm-profile">
+              <p>Flavor Profile</p>
+              <Meter label="Độ đắng" value={profile.bitterness} />
+              <Meter label="Độ hương" value={profile.aroma} />
+              <Meter label="Thân vị" value={profile.body} />
+              <small>Chỉ số tham khảo theo mô tả hương vị.</small>
+            </div>
+            <button
+              className="button full"
+              onClick={() => {
+                close();
+                navigate(`/san-pham/${product.id}?goi-y=1`);
+              }}
+            >
+              Xem chi tiết sản phẩm &amp; mua ngay <ArrowRight size={18} aria-hidden="true" />
+            </button>
+            <button className="quiz-skip gm-redo" onClick={reset}>
+              <RotateCcw size={15} aria-hidden="true" /> Làm lại quiz
+            </button>
+          </div>
+        </section>
+      )}
     </Overlay>
   );
 }

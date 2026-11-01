@@ -36,7 +36,7 @@ export function Home({ onQuick }: QuickProps) {
               Khám phá sản phẩm
             </Link>
             <button className="button button-ghost" onClick={() => window.dispatchEvent(new Event(OPEN_QUIZ))}>
-              Tìm cà phê hợp gu
+              Bạn thuộc gu cà phê nào?
             </button>
           </div>
         </div>
