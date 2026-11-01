@@ -1,6 +1,6 @@
 import Image from "./Image";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { type Product, useCart, money } from "./store";
 export function ProductCard({
@@ -87,6 +87,7 @@ export function ProductDetail({
   onAdded: () => void;
   compact?: boolean;
 }) {
+  const navigate = useNavigate();
   const [image, setImage] = useState(0),
     [grind, setGrind] = useState<"Hạt" | "Bột">("Hạt"),
     [size, setSize] = useState<"250g" | "500g">("250g"),
