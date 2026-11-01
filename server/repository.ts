@@ -14,7 +14,7 @@ export async function query(statement: string, values: unknown[] = []): Promise<
   if (!local) {
     await mkdir(resolve('.local'), { recursive: true });
     const { DatabaseSync } = await import('node:sqlite');
-    local = new DatabaseSync(resolve('.local/cms.sqlite'));
+    local = new DatabaseSync(process.env.CMS_DB_PATH || resolve('.local/cms.sqlite'));
     local.exec('PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;');
   }
   const stmt = local.prepare(statement.replace(/\$\d+/g, '?'));
