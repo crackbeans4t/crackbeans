@@ -6,12 +6,14 @@ export default function Overlay({
   title,
   children,
   wide = false,
+  className = "",
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
   wide?: boolean;
+  className?: string;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const previousFocus=useRef<HTMLElement|null>(null);
@@ -41,7 +43,7 @@ export default function Overlay({
   return (
     <dialog
       ref={ref}
-      className={`drawer ${wide ? "drawer-wide" : ""}`}
+      className={`drawer ${wide ? "drawer-wide" : ""} ${className}`}
       aria-label={title}
       onKeyDown={(e) => {
         if (e.key === "Escape") {
