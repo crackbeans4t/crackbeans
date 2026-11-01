@@ -1717,3 +1717,12 @@ body { background: var(--paper); color: var(--ink); font-family: "Be Vietnam Pro
   *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
 }
 .product-badges{display:flex;gap:8px;align-items:center;margin-bottom:10px}.brand-badge,.pack-badge{display:inline-flex;align-items:center;border-radius:999px;padding:5px 10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase}.brand-badge{background:#2f2116;color:#f7efd9}.brand-badge.arabica{background:#b85f32}.pack-badge{background:#eadcc0;color:#5d4027}.choice small{display:block;font-size:10px;opacity:.7}.choice{cursor:pointer}.button,.quick-button{border-radius:16px}.text-link{border-radius:12px}
+/* CB-020: typography and cart alignment */
+:root { --heading: "Lora", Georgia, serif; --body: "Be Vietnam Pro", Arial, sans-serif; }
+body { font-family: var(--body); }
+h1,h2,h3,h4,.logo,.desktop-nav a,.mobile-nav > a,.mobile-product-nav > a { font-family: var(--heading); }
+.cart-toggle { width: 48px; height: 48px; padding: 10px; position: relative; line-height: 0; }
+.cart-toggle svg { display: block; width: 23px; height: 23px; transform: translateY(1px); }
+.cart-count { top: 2px; right: 1px; }
+.header-actions .icon-button { flex: 0 0 48px; }
+@media (max-width:700px) { .header-actions { gap: 2px; } .cart-toggle { width:44px; height:44px; } .cart-count { top:0; right:-1px; } }
