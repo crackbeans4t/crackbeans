@@ -7,6 +7,14 @@ import "@fontsource/be-vietnam-pro/latin-400.css";
 import "@fontsource/be-vietnam-pro/latin-600.css";
 import "@fontsource/lora/vietnamese-500.css";
 import "@fontsource/lora/latin-500.css";
+import "@fontsource/oswald/vietnamese-400.css";
+import "@fontsource/oswald/vietnamese-600.css";
+import "@fontsource/oswald/latin-400.css";
+import "@fontsource/oswald/latin-600.css";
+import "@fontsource/public-sans/vietnamese-400.css";
+import "@fontsource/public-sans/vietnamese-600.css";
+import "@fontsource/public-sans/latin-400.css";
+import "@fontsource/public-sans/latin-600.css";
 import App from "./App";
 import "./styles.css";
 const app = (
