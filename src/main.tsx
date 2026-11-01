@@ -1,12 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import "@fontsource/be-vietnam-pro/vietnamese-400.css";
-import "@fontsource/be-vietnam-pro/vietnamese-600.css";
-import "@fontsource/be-vietnam-pro/latin-400.css";
-import "@fontsource/be-vietnam-pro/latin-600.css";
-import "@fontsource/lora/vietnamese-500.css";
-import "@fontsource/lora/latin-500.css";
 import "@fontsource/oswald/vietnamese-400.css";
 import "@fontsource/oswald/vietnamese-600.css";
 import "@fontsource/oswald/latin-400.css";
