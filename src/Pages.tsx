@@ -57,7 +57,7 @@ export function Home({ onQuick }: QuickProps) {
           </Link>
         </div>
         <div className="featured-products" aria-label="Sản phẩm nổi bật">
-          {[...data.products].sort((a, b) => Number(b.category === "Arabica") - Number(a.category === "Arabica")).map((p) => (
+          {[...data.products].sort((a, b) => Number(b.category === "Arabica") - Number(a.category === "Arabica")).slice(0, 3).map((p) => (
             <ProductCard key={p.id} product={p} onQuick={onQuick} />
           ))}
         </div>
