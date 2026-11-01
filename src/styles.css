@@ -1050,6 +1050,9 @@ legend {
   margin: auto;
   border-radius: var(--radius-lg);
 }
+.drawer-wide .drawer-body {
+  flex-basis: auto;
+}
 .drawer-wide[open] {
   animation: cb-pop 0.25s var(--ease) both;
 }
@@ -1752,7 +1755,9 @@ legend {
 .gm-welcome,
 .gm-steps,
 .gm-result {
-  flex: 1;
+  /* flex-basis auto: Safari tính chiều cao hộp thoại fit-content bằng 0 nếu basis = 0. */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: auto;
 }
 
