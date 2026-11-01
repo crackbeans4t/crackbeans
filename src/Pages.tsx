@@ -22,14 +22,8 @@ export function Home({ onQuick }: QuickProps) {
           height="640"
         />
         <div className="hero-content container">
-          <p className="eyebrow">
-            Archive Hybrid — Contemporary Vietnamese Coffee
-          </p>
-          <h1>
-            Lưu trữ hương vị cà phê
-            <br />
-            rang mộc nguyên bản
-          </h1>
+          <p className="eyebrow">Archive Hybrid Coffee</p>
+          <h1>Lưu trữ hương vị cà phê rang mộc nguyên bản</h1>
           <p className="hero-description">
             Vượt trên một thức uống thông thường, đây là sự giao thoa hoàn hảo
             giữa tinh hoa nông sản Việt, nghệ thuật rang mộc thủ công tỉ mỉ và
@@ -90,18 +84,17 @@ export function Home({ onQuick }: QuickProps) {
             <h2>Dấu ấn cao nguyên</h2>
           </div>
         </div>
-        {data.regions.map((r, i) => (
+        {data.regions.map((r) => (
           <article className="origin-row" key={r.name}>
             <Image
-              src={r.name === "CẦU ĐẤT" ? data.assets.values[2] : r.name === "NÚI MIN" ? "/assets/7118ee_b154a7e886274213a4959d4b0ee64eda~mv2.webp" : r.image}
-              alt={r.name === "ĐẮK LẮK" ? `Vùng nguyên liệu ${r.name}` : "Ảnh minh họa cà phê Việt Nam"}
+              src={r.image}
+              alt={`Phong cảnh vùng nguyên liệu ${r.name}`}
               loading="lazy"
               width="600"
               height="400"
             />
             <div>
-              
-              <h3>{r.name}</h3>{r.name !== "ĐẮK LẮK" && <small className="image-caption">Ảnh minh họa cà phê Việt Nam</small>}
+              <h3>{r.name}</h3>
               <p>{r.text}</p>
             </div>
           </article>
@@ -130,7 +123,7 @@ export function About() {
     <>
       <section className="about-hero container page-space">
         <div>
-          <p className="eyebrow">Brand story</p>
+          <p className="eyebrow">Câu chuyện thương hiệu</p>
           <h1>
             Từ thổ nhưỡng
             <br />
@@ -262,7 +255,7 @@ export function Shop({ onQuick }: QuickProps) {
 export function Blog() {
   const {data}=useContent();
   return (
-    <section className="container page-space">
+    <section className="container page-space blog-head">
       <p className="eyebrow">Chuyện cà phê</p>
       <h1>Góc cà phê Crack Beans</h1>
       <div className="blog-grid">
@@ -292,6 +285,37 @@ export function Blog() {
     </section>
   );
 }
+type Block =
+  | { type: "p" | "h2"; text: string }
+  | { type: "h3"; text: string; body: string[] };
+// Article text: blank line separates blocks, "## " = heading, "### " = sub-section.
+function parseArticle(text: string): Block[] {
+  const blocks: Block[] = [];
+  for (const raw of text.split(/\n\s*\n/)) {
+    const t = raw.trim();
+    if (!t) continue;
+    const last = blocks.at(-1);
+    if (t.startsWith("### ")) blocks.push({ type: "h3", text: t.slice(4), body: [] });
+    else if (t.startsWith("## ")) blocks.push({ type: "h2", text: t.slice(3) });
+    else if (last?.type === "h3") last.body.push(t);
+    else blocks.push({ type: "p", text: t });
+  }
+  return blocks;
+}
+function Paragraph({ text, lead = false }: { text: string; lead?: boolean }) {
+  const m = /^([^:]{2,24}):\s*(.+)$/s.exec(text);
+  return (
+    <p className={lead ? "article-lead" : undefined}>
+      {m ? (
+        <>
+          <strong>{m[1]}:</strong> {m[2]}
+        </>
+      ) : (
+        text
+      )}
+    </p>
+  );
+}
 export function Post() {
   const {data}=useContent();
   const { id } = useParams(),
@@ -303,8 +327,7 @@ export function Post() {
         <Link to="/blog">Về blog</Link>
       </section>
     );
-  const body =
-    post.text.split("phút đọc")[1]?.split("Bài đăng gần đây")[0] || post.text;
+  const blocks = parseArticle(post.text);
   return (
     <article className="article container page-space">
       <Link className="text-link" to="/blog">
@@ -318,36 +341,41 @@ export function Post() {
         width="1000"
         height="560"
       />
-      {body
-        .split(/\n\s*\n/)
-        .map((p) => p.trim())
-        .filter(Boolean)
-        .map((p, i) =>
-          p.length < 75 && !p.startsWith("Thao tác") ? (
-            <h2 key={i}>{p}</h2>
-          ) : (
-            <p key={i}>{p}</p>
-          ),
-        )}
-      {post.steps && (
-        <section className="brewing-steps">
-          <h2>5 bước pha phin bằng hình ảnh</h2>
-          <div>
-            {post.steps.map((src, i) => (
-              <figure key={src}>
+      {blocks.map((b, i) => {
+        if (b.type === "h2") return <h2 key={i}>{b.text}</h2>;
+        if (b.type === "h3") {
+          const step = /^Bước (\d+)/.exec(b.text);
+          const src = step && post.steps?.[Number(step[1]) - 1];
+          if (src)
+            return (
+              <section className="brew-step" key={i}>
                 <Image
                   src={src}
-                  alt={`Hướng dẫn pha phin — bước ${i + 1}`}
+                  alt={`Minh họa ${b.text.toLowerCase()} pha phin`}
                   width="900"
                   height="1125"
                   loading="lazy"
+                  sizes="220px"
                 />
-                <figcaption>Bước {i + 1}</figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-      )}
+                <div>
+                  <h3>{b.text}</h3>
+                  {b.body.map((t, j) => (
+                    <Paragraph key={j} text={t} />
+                  ))}
+                </div>
+              </section>
+            );
+          return (
+            <section key={i}>
+              <h3>{b.text}</h3>
+              {b.body.map((t, j) => (
+                <Paragraph key={j} text={t} />
+              ))}
+            </section>
+          );
+        }
+        return <Paragraph key={i} text={b.text} lead={i === 0} />;
+      })}
       <Link className="button" to="/san-pham">
         Khám phá sản phẩm <ArrowRight size={18} />
       </Link>

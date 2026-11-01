@@ -17,7 +17,7 @@ export default function Checkout() {
     } catch(e) {setError(e instanceof Error ? e.message : 'Không thể kết nối. Vui lòng thử lại.');}
     finally {setBusy(false);}
   }
-  if(receipt) return <section className="container checkout-result page-space"><p className="eyebrow">Đã nhận yêu cầu COD</p><h1>Cảm ơn bạn đã chọn Crack Beans.</h1><p>Mã yêu cầu <strong>{receipt.slice(0,8).toUpperCase()}</strong>. Cửa hàng sẽ liên hệ xác nhận sản phẩm, phí vận chuyển và lịch giao. Bạn thanh toán tiền mặt khi nhận hàng.</p><p>Đơn chưa được xác nhận giao hàng. Giỏ hàng được giữ để bạn tiện đối chiếu.</p><Link className="button" to="/san-pham">Tiếp tục khám phá</Link></section>;
+  if(receipt) return <section className="container checkout-result page-space"><p className="eyebrow">Đã nhận yêu cầu COD</p><h1>Cảm ơn bạn đã chọn Crack Beans.</h1><p>Mã yêu cầu <strong>{receipt.slice(0,8).toUpperCase()}</strong>. Cửa hàng sẽ liên hệ xác nhận sản phẩm, phí vận chuyển và lịch giao. Bạn thanh toán tiền mặt khi nhận hàng.</p><Link className="button" to="/san-pham">Tiếp tục khám phá</Link></section>;
   return <section className="container checkout page-space">
     <nav className="breadcrumbs" aria-label="Tiến trình đặt hàng"><Link to="/san-pham">Sản phẩm</Link><span>/</span><span>Thông tin giao hàng</span></nav>
     <p className="eyebrow">Crack Beans · Đặt hàng</p><h1>Một chút cà phê,<br/>gửi đến bạn.</h1>
@@ -30,11 +30,11 @@ export default function Checkout() {
         <section className="payment-method"><span className="eyebrow">Phương thức thanh toán</span><h3>Tiền mặt khi nhận hàng</h3><p>Thanh toán sau khi nhận sản phẩm. Cửa hàng sẽ xác nhận phí vận chuyển trước khi gửi.</p></section>
         <label className="consent"><input type="checkbox" name="consent" required/><span>Tôi đồng ý để Crack Beans sử dụng thông tin trên nhằm liên hệ, xử lý yêu cầu đặt hàng. <Link to="/chinh-sach/bao-mat">Chính sách bảo mật</Link>.</span></label>
         {error && <p role="alert" className="form-error">{error}</p>}
-        <button className="button full" disabled={busy}>{busy?'Đang gửi yêu cầu…':'Gửi yêu cầu đặt hàng COD'}</button><small className="muted">Chưa thu tiền tại bước này. Hotline: <a href="tel:0767509715">076 750 9715</a>.</small>
+        <button className="button full" disabled={busy}>{busy?'Đang gửi yêu cầu…':'Gửi yêu cầu đặt hàng COD'}</button><small className="muted">Cần hỗ trợ? Gọi <a href="tel:0767509715">076 750 9715</a>.</small>
       </form>
       <aside className="checkout-summary"><p className="eyebrow">Gu cà phê của bạn</p><h2>Sản phẩm đã chọn <span>({cart.count})</span></h2>
         {cart.lines.map(line=>{const p=data.products.find(p=>p.id===line.id);return p&&<div className="checkout-item" key={line.id+line.grind+line.size}><img src={p.images[0].src} alt="" width="72" height="90"/><div><Link to={`/san-pham/${p.id}`}>{p.name}</Link><small>{line.size === "500g" ? "500 g" : "250 g"} · {line.grind} · {line.quantity} gói</small><strong>{money(p.price*(line.size === "500g" ? 2 : 1)*line.quantity)}</strong></div></div>})}
-        <div className="summary-totals"><div><span>Tạm tính</span><strong>{money(cart.total)}</strong></div><div><span>Phí vận chuyển</span><span>Xác nhận qua điện thoại</span></div><div className="summary-subtotal"><span>Tiền sản phẩm</span><strong>{money(cart.total)}</strong></div><small>Tổng thanh toán cuối cùng gồm tiền sản phẩm và phí giao hàng được xác nhận trước khi gửi.</small></div>
+        <div className="summary-totals"><div><span>Phí vận chuyển</span><span>Báo khi gọi xác nhận</span></div><div className="summary-subtotal"><span>Tạm tính</span><strong>{money(cart.total)}</strong></div></div>
         <Link className="text-link" to="/san-pham">Chọn thêm cà phê</Link>
       </aside>
     </div>}

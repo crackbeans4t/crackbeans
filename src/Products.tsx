@@ -1,7 +1,7 @@
 import Image from "./Image";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 import { type Product, useCart, money } from "./store";
 export function ProductCard({
   product,
@@ -30,14 +30,11 @@ export function ProductCard({
         </button>
       </div>
       <div className="product-meta">
-        <div className="product-badges"><span className={`brand-badge ${product.category.toLowerCase()}`}>{product.category}</span><span className="pack-badge">250 g · 500 g</span></div>
+        <div className="product-badges"><span className={`brand-badge ${product.category.toLowerCase()}`}>{product.category}</span></div>
         <h3>
           <Link to={`/san-pham/${product.id}`}>{product.name}</Link>
         </h3>
-        <p>{money(product.price)}</p>
-        <Link className="text-link" to={`/san-pham/${product.id}`}>
-          Xem sản phẩm <ArrowRight size={16} />
-        </Link>
+        <p>{money(product.price)} <span className="muted">/ 250 g</span></p>
       </div>
     </article>
   );
@@ -119,17 +116,9 @@ export function ProductDetail({
             </button>
           ))}
         </div>
-        <a
-          className="text-link"
-          href={product.images[image].src}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Mở ảnh đầy đủ <ArrowRight size={16} />
-        </a>
       </div>
       <div className="product-info">
-        <p className="eyebrow">{product.category} / Archive Hybrid Coffee</p>
+        <p className="eyebrow">{product.category}</p>
         {compact ? <h3>{product.name}</h3> : <h1>{product.name}</h1>}
         <p className="price">
           {money(product.price * (size === "500g" ? 2 : 1))} <span>/ {size === "500g" ? "500 g" : "250 g"}</span>
@@ -140,9 +129,6 @@ export function ProductDetail({
           <div className="choice-row">
             {(["250g", "500g"] as const).map((s) => <button type="button" key={s} aria-pressed={size === s} className={`choice ${size === s ? "selected" : ""}`} onClick={() => setSize(s)}>{s === "500g" ? "500 g" : "250 g"}</button>)}
           </div>
-          <small>
-            Gói 500 g có giá gấp đôi gói 250 g.
-          </small>
         </fieldset>
         <fieldset>
           <legend>Phân loại</legend>
@@ -173,13 +159,9 @@ export function ProductDetail({
               onAdded();
             }}
           >
-            Thêm vào giỏ hàng <Plus size={18} />
+            <ShoppingCart size={18} aria-hidden="true" /> Thêm vào giỏ
           </button>
         </div>
-        <p className="product-note">
-          Thông tin giao hàng và phí vận chuyển được xác nhận trước khi đặt
-          hàng.
-        </p>
       </div>
     </div>
   );
