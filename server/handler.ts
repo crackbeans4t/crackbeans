@@ -54,6 +54,8 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       const ip = req.socket.remoteAddress || 'local';
       if (!await limit(`orders:${ip}`, 8, 3600000)) return send(res, 429, { error: 'Đã gửi nhiều yêu cầu. Vui lòng liên hệ cửa hàng.' });
       const { content } = await getContent();
+      const missing = input.lines.find(line => !content.products.some((p: {id:string}) => p.id === line.id));
+      if (missing) return send(res, 409, { error: 'Một sản phẩm trong giỏ không còn bán. Xóa sản phẩm đó khỏi giỏ rồi thử lại.' });
       const lines = input.lines.map(line => {
         const p = content.products.find((p: {id:string}) => p.id === line.id);
         if (!p) throw new Error('Sản phẩm không còn trong catalogue');
@@ -84,6 +86,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     send(res, 404, { error: 'Không tìm thấy API' });
   } catch (error) {
     const bad = error instanceof SyntaxError;
+    if (!bad) console.error('[api]', req.method, req.url, error);
     send(res, bad ? 400 : 503, { error: bad ? 'JSON không hợp lệ' : 'Dịch vụ chưa sẵn sàng. Thử lại hoặc liên hệ cửa hàng.' });
   }
 }

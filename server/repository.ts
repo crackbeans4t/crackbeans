@@ -9,7 +9,15 @@ const connection = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 const sql = connection ? neon(connection) : null;
 export const storage = sql ? 'Neon Postgres' : 'SQLite local';
 export async function query(statement: string, values: unknown[] = []): Promise<Row[]> {
-  if (sql) return await sql.query(statement, values) as Row[];
+  if (sql) {
+    // Neon tự tạm dừng khi rảnh; request đầu tiên lúc đang khởi động có thể lỗi mạng, nên thử lại một lần.
+    try { return await sql.query(statement, values) as Row[]; }
+    catch (error) {
+      if (!/fetch failed|ECONNRESET|ETIMEDOUT|terminated|socket/i.test(String((error as Error)?.message))) throw error;
+      await new Promise((r) => setTimeout(r, 400));
+      return await sql.query(statement, values) as Row[];
+    }
+  }
   if (process.env.VERCEL) throw new Error('DATABASE_URL chưa được cấu hình');
   if (!local) {
     await mkdir(resolve('.local'), { recursive: true });
