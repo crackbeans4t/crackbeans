@@ -23,8 +23,8 @@ export function ProductCard({
           />
           <img className="product-hover-image" src={product.images[1]?.src ?? product.images[0].src} alt="" aria-hidden="true" width="700" height="700" loading="lazy" />
         </Link>
-        <button className="quick-button" onClick={() => cart.add(product.id, "Hạt", 1)}>
-          Thêm vào giỏ <ShoppingCart size={16} aria-hidden="true" />
+        <button className="quick-button quick-add" aria-label={`Thêm nhanh ${product.name}, Hạt 250 g`} title="Thêm nhanh 1 gói Hạt 250 g" onClick={() => cart.add(product.id, "Hạt", 1)}>
+          <ShoppingCart size={20} aria-hidden="true" />
         </button>
       </div>
       <div className="product-meta">

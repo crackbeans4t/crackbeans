@@ -301,6 +301,7 @@ function Site() {
     setCartOpen(false);
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [location.pathname]);
+  if(location.pathname==='/admin') return <><Seo/><Admin/></>;
   return (
     <>
       <Seo />

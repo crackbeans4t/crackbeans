@@ -55,6 +55,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const {data:catalogue, ready}=useContent();
   const [lines, setLines] = useState<CartLine[]>([]);
   const [hydrated,setHydrated] = useState(false);
+  const [notice,setNotice]=useState('');
+  useEffect(()=>{if(notice){const timer=setTimeout(()=>setNotice(''),3000);return()=>clearTimeout(timer);}},[notice]);
   useEffect(() => { if(ready) {setLines(loadCart(catalogue.products)); setHydrated(true);} }, [ready,catalogue.products]);
   useEffect(() => {
     if(!hydrated) return;
@@ -65,6 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [lines,hydrated]);
   function add(id: string, grind: CartLine["grind"], quantity: number) {
+    setNotice(`Đã thêm ${quantity} gói ${grind} 250 g · ${catalogue.products.find(p=>p.id===id)?.name || 'cà phê'}`);
     setLines((old) => {
       const exists = old.find((l) => l.id === id && l.grind === grind);
       return exists
@@ -106,6 +109,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+      <div className="cart-toast" role="status" aria-live="polite">{notice}</div>
     </CartContext.Provider>
   );
 }
