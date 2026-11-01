@@ -166,6 +166,14 @@ export function About() {
         </div>
       </section>
       <section className="commitment">
+        <Image
+          src="/assets/commitment-soil.webp"
+          alt="Cận cảnh chiếc xẻng đang múc lớp đất màu mỡ, minh họa quá trình chuẩn bị thổ nhưỡng canh tác của CRACK BEANS"
+          sizes="100vw"
+          width="1125"
+          height="750"
+          loading="lazy"
+        />
         <p className="eyebrow">Cam kết</p>
         <blockquote>
           “Gìn giữ giá trị khởi nguyên bằng quy trình vận hành nghiêm cẩn, chúng
