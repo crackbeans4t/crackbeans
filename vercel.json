@@ -44,5 +44,17 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/blog/pha-phin",
+      "destination": "/blog/cach-pha-ca-phe-phin",
+      "permanent": true
+    },
+    {
+      "source": "/blog/sau-dong-ca-phe",
+      "destination": "/blog/ca-phe-robusta-va-arabica",
+      "permanent": true
+    }
   ]
 }
