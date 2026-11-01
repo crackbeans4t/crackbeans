@@ -11,7 +11,7 @@ function send(res: ServerResponse, code: number, data: unknown) { res.writeHead(
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
     const url = new URL(req.url || '/', 'http://localhost');
-    const path = url.pathname.replace(/\/$/, '');
+    const path = (url.searchParams.has('route')?`/api/${url.searchParams.get('route')}`:url.pathname).replace(/\/$/, '');
     const method = req.method || 'GET';
     // Mutations are same-origin only, including login and public order requests.
     if (!['GET','HEAD'].includes(method)) {
