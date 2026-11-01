@@ -93,15 +93,15 @@ export function Home({ onQuick }: QuickProps) {
         {data.regions.map((r, i) => (
           <article className="origin-row" key={r.name}>
             <Image
-              src={r.image}
-              alt={`Vùng nguyên liệu ${r.name}`}
+              src={r.name === "CẦU ĐẤT" ? data.assets.values[2] : r.name === "NÚI MIN" ? "/assets/7118ee_b154a7e886274213a4959d4b0ee64eda~mv2.webp" : r.image}
+              alt={r.name === "ĐẮK LẮK" ? `Vùng nguyên liệu ${r.name}` : "Ảnh minh họa cà phê Việt Nam"}
               loading="lazy"
               width="600"
               height="400"
             />
             <div>
               
-              <h3>{r.name}</h3>
+              <h3>{r.name}</h3>{r.name !== "ĐẮK LẮK" && <small className="image-caption">Ảnh minh họa cà phê Việt Nam</small>}
               <p>{r.text}</p>
             </div>
           </article>
